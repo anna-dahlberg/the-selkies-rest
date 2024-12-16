@@ -1,0 +1,22 @@
+/* || Root styling & variables */
+
+:root {
+    font-size: 16px;
+
+    --kelp-forest: #334532;
+    --highland-mist: #202F42;
+    --selkie-grey: #9DA7B6;
+    --loch-foam: #F4F1E7;
+    --heather-bloom: #BAA7C1;
+}
+
+/* || Typography */
+
+@font-face {
+    font-family: 'Playfair Display';
+    src: url('assets/fonts/Playfair_Display/PlayfairDisplay-VariableFont_wght.ttf');
+}
+
+
+
+
