@@ -95,3 +95,18 @@ main {
 .form-group button:hover {
     background-color: #202F42;
 }
+
+input {
+    width: 20px;
+    height: 20px;
+}
+
+label {
+    width: 90px;
+}
+
+fieldset div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

@@ -71,3 +71,20 @@ CREATE TABLE IF NOT EXISTS rooms_bookings_features (
 	FOREIGN KEY (discount_id) REFERENCES discounts(id)
 );
 ```
+
+### Initial Insertion Queries 
+
+```sql
+INSERT INTO rooms (type, price)
+VALUES ('Budget', 2),
+	('Standard', 4),
+	('Luxury', 6);
+
+INSERT INTO features ("name", price)
+VALUES ('Sauna',2),
+		('Bicycles', 2),
+		('Radio', 2);
+
+INSERT INTO discounts (name, min_nights, discount_rate)
+VALUES ('Selkie Stay Discount', 3, 0.2);
+```
