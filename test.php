@@ -72,19 +72,16 @@ require(__DIR__ . '/vendor/autoload.php')
                         <legend>Features:</legend>
                         <div>
                             <label for="sauna">Sauna $2</label>
-                            <input type="checkbox" name="sauna" id="sauna">
+                            <input type="checkbox" name="features[]" id="sauna" value="sauna">
                         </div>
-
                         <div>
                             <label for="bicycle">Bicycle $2</label>
-                            <input type="checkbox" name="bicycle" id="bicycle">
+                            <input type="checkbox" name="features[]" id="bicycle" value="bicycle">
                         </div>
-
                         <div>
                             <label for="radio">Radio $2</label>
-                            <input type="checkbox" name="radio" id="radio">
+                            <input type="checkbox" name="features[]" id="radio" value="radio">
                         </div>
-
                     </fieldset>
                 </div>
 

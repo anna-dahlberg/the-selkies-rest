@@ -19,8 +19,7 @@ CREATE TABLE IF NOT EXISTS rooms (
 ```sql
 CREATE TABLE IF NOT EXISTS guests (
 	id INTEGER PRIMARY KEY AUTOINCREMENT, 
-	first_name VARCHAR(30),
-	last_name VARCHAR(40),
+	name VARCHAR(50),
 	email VARCHAR(50)
 );
 ```
@@ -33,7 +32,9 @@ CREATE TABLE IF NOT EXISTS bookings (
 	arrival_date DATE,
 	departure_date DATE,
 	guest_id INTEGER,
-	FOREIGN KEY (guest_id) REFERENCES guests(id)
+	room_id INTEGER,
+	FOREIGN KEY (guest_id) REFERENCES guests(id),
+	FOREIGN KEY (room_id) REFERENCES rooms(id)
 );
 ```
 
