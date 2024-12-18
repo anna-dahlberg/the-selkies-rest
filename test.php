@@ -28,38 +28,38 @@ require(__DIR__ . '/vendor/autoload.php')
     </header>
 
     <main>
-        <section class="booking-form">
+        <section class="bookingForm">
             <h2>Book Your Stay</h2>
 
             <form action="booking.php" method="POST">
 
 
-                <div class="form-group">
+                <div class="formGroup">
                     <label for="name">Your Name:</label>
                     <input type="text" name="name" id="name" required>
                 </div>
 
 
-                <div class="form-group">
+                <div class="formGroup">
                     <label for="email">Your E-mail:</label>
                     <input type="email" id="email" name="email" placeholder="you@example.com" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="arrival-date">Arrival Date:</label>
-                    <input type="date" id="arrival-date" name="arrival_date" min="2025-01-01" max="2025-01-31" required>
+                <div class="formGroup">
+                    <label for="arrivalDate">Arrival Date:</label>
+                    <input type="date" id="arrivalDate" name="arrivalDate" min="2025-01-01" max="2025-01-31" required>
                 </div>
 
 
-                <div class="form-group">
-                    <label for="departure-date">Departure Date:</label>
-                    <input type="date" id="departure-date" name="departure_date" min="2025-01-01" max="2025-01-31" required>
+                <div class="formGroup">
+                    <label for="departureDate">Departure Date:</label>
+                    <input type="date" id="departureDate" name="departureDate" min="2025-01-01" max="2025-01-31" required>
                 </div>
 
 
-                <div class="form-group">
-                    <label for="room-type">Room Type:</label>
-                    <select id="room-type" name="room_type" required>
+                <div class="formGroup">
+                    <label for="roomType">Room Type:</label>
+                    <select id="roomType" name="roomType" required>
                         <option value="budget">Budget</option>
                         <option value="standard">Standard</option>
                         <option value="luxury">Luxury</option>
@@ -67,7 +67,7 @@ require(__DIR__ . '/vendor/autoload.php')
                 </div>
 
 
-                <div class="form-group">
+                <div class="formGroup">
                     <fieldset>
                         <legend>Features:</legend>
                         <div>
@@ -88,12 +88,12 @@ require(__DIR__ . '/vendor/autoload.php')
                     </fieldset>
                 </div>
 
-                <div class="form-group">
+                <div class="formGroup">
                     <label for="transferCode">Your transferCode:</label>
                     <input type="password" name="transferCode" id="transferCode" required>
                 </div>
 
-                <div class="form-group">
+                <div class="formGroup">
                     <button type="submit">Make a reservation!</button>
                     <button type="reset">Reset form</button>
                 </div>

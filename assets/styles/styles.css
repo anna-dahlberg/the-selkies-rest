@@ -57,7 +57,7 @@ header h1 {
 }
 
 
-.no-bullets {
+.noBullets {
     list-style: none;
 }
 
@@ -65,7 +65,7 @@ header h1 {
 main {
     padding: 20px;
 }
-.booking-form {
+.bookingForm {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
@@ -73,26 +73,26 @@ main {
     margin: 0 auto;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.form-group {
+.formGroup {
     margin-bottom: 15px;
 }
-.form-group label {
+.formGroup label {
     display: block;
     margin-bottom: 5px;
 }
-.form-group input, .form-group select, .form-group button {
+.formGroup input, .formGroup select, .formGroup button {
     width: 100%;
     padding: 8px;
     border: 1px solid #9DA7B6;
     border-radius: 4px;
 }
-.form-group button {
+.formGroup button {
     background-color: #334532;
     color: white;
     border: none;
     cursor: pointer;
 }
-.form-group button:hover {
+.formGroup button:hover {
     background-color: #202F42;
 }
 
