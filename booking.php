@@ -30,7 +30,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     //Check for empty fields
 
     //Validate room types 
-    $validRoomTypes = ['budget', 'standard', 'luxury'];
+    $validRoomTypes = ['Budget', 'Standard', 'Luxury'];
     if (!in_array($roomType, $validRoomTypes)) {
         die('No room type selected');
     }
@@ -40,25 +40,50 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         die('Departure date must be after arrival date');
     }
 
-    // Prepare data for insertion
-    $featuresList = implode(',', $features); // Convert features array to a comma-separated string
+    //Room-id matching
+    $roomStatement = $database->prepare("SELECT id FROM rooms WHERE type = :roomType LIMIT 1");
+    $roomStatement->execute([
+        ':roomType' => $roomType
+    ]);
 
-    $statementGuest = $database->prepare("INSERT into guests(name, email) VALUES(:name, :email)");
-    $statementBooking = $database->prepare("INSERT into bookings(guest_id, arrival_date, departure_date, room_id) VALUES(:guest_id, :arrivalDate, :departureDate, :room_id)");
-    $statementFeatures = $databse->prepare("INSERT into features()");
+    $room = $roomStatement->fetch(PDO::FETCH_ASSOC);
 
-    $statementGuest->execute([
+    if (!$room) {
+        die('Room type not found');
+    };
+    $room_id = $room['id'];
+
+    //Insert guest information to guest table 
+    $guestStatement = $database->prepare("INSERT into guests(name, email) VALUES(:name, :email)");
+    $guestStatement->execute([
         ':name' => $name,
         ':email' => $email
     ]);
 
     $guest_id = $database->lastInsertId();
 
-    $statementBooking->execute([
+    //Insert booking information to booking table
+    $bookingStatement = $database->prepare("INSERT into bookings(guest_id, arrival_date, departure_date, room_id) VALUES(:guest_id, :arrivalDate, :departureDate, :room_id)");
+    $bookingStatement->execute([
         ':guest_id' => $guest_id,
         ':arrivalDate' => $arrivalDate,
         ':departureDate' => $departureDate
     ]);
+
+    $booking_id = $database->lastInsertId();
+
+    //Check if guest selected any features
+    if (!empty($features)) {
+        $featureStatement = $database->prepare("INSERT into rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)");
+
+        foreach ($features as $feature) {
+            $feature_id = intval($feature);
+            $featureStatement->execute([
+                ':booking_id' => $booking_id,
+                ':feature_id' => $feature_id
+            ]);
+        }
+    }
 
     echo "Booking successfull!";
 } else {
