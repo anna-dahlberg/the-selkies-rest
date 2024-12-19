@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// require(__DIR__ . '/app/functions.php');
+
 //Connection to database 
 $database = new PDO('sqlite:/Users/annadahlberg/dev/yrgo/assignments/the-selkies-rest/app/database/bookings.db');
 
@@ -41,6 +43,10 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         die('Departure date must be after arrival date');
     }
 
+    if (strtotime($arrivalDate) < strtotime('today')) {
+        die('Cannot book dates in the past');
+    }
+
     //Room-id matching
     $roomStatement = $database->prepare("SELECT id FROM rooms WHERE type = :roomType LIMIT 1");
     $roomStatement->execute([
@@ -64,12 +70,30 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     $guest_id = $database->lastInsertId();
 
+    //Check availability
+
+    $availabilityCheck = $database->prepare("SELECT COUNT(*) FROM bookings WHERE room_id = :room_id AND (
+            (arrival_date <= :arrivalDate AND departure_date > :arrivalDate)
+        OR (arrival_date < :departureDate AND departure_date >= :departureDate)
+        OR (arrival_date >= :arrivalDate AND departure_date <= :departureDate)
+    )");
+    $availabilityCheck->execute([
+        ':room_id' => $room_id,
+        ':arrivalDate' => $arrivalDate,
+        ':departureDate' => $departureDate
+    ]);
+
+    if ($availabilityCheck->fetchColumn() > 0) {
+        die('Room not available for selected dates');
+    }
+
     //Insert booking information to booking table
     $bookingStatement = $database->prepare("INSERT into bookings(guest_id, arrival_date, departure_date, room_id) VALUES(:guest_id, :arrivalDate, :departureDate, :room_id)");
     $bookingStatement->execute([
         ':guest_id' => $guest_id,
         ':arrivalDate' => $arrivalDate,
-        ':departureDate' => $departureDate
+        ':departureDate' => $departureDate,
+        ':room_id' => $room_id
     ]);
 
     $booking_id = $database->lastInsertId();
