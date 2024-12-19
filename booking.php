@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 // require(__DIR__ . '/app/functions.php');
 
+$errors = []; //empty array to catch errors
+
 //Connection to database 
 $database = new PDO('sqlite:/Users/annadahlberg/dev/yrgo/assignments/the-selkies-rest/app/database/bookings.db');
 
@@ -19,7 +21,8 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     //Trim and sanitize inputs
     $name = htmlspecialchars(trim($_POST['name'])); //Remove white space and sanatize characters
-    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL); //validate email
+    $email = trim($_POST['email']); //validate email
+    $sanitizedEmail = filter_var($email, FILTER_SANITIZE_EMAIL); //sanitize email
     $arrivalDate = $_POST['arrivalDate'];
     $departureDate = $_POST['departureDate'];
     $roomType = ucfirst(strtolower($_POST['roomType']));
@@ -27,24 +30,28 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $features = isset($_POST['features']) ? $_POST['features'] : [];
     //$transferCode = htmlspecialchars(trim($_POST['transferCode']));
 
+    if (!filter_var($sanitizedEmail, FILTER_VALIDATE_EMAIL)) { //Validate email
+        $errors[] = "Please enter a valid e-mail adress";
+    }
+
     if (empty($name) || !$email || empty($arrivalDate) || empty($departureDate) || empty($roomType) /*|| empty($transferCode)*/) {
-        die('Required fields must be filled in and valid');
+        $errors[] = "Please fill in all the required fields.";
     }
     //Check for empty fields
 
     //Validate room types 
     $validRoomTypes = ['Budget', 'Standard', 'Luxury'];
     if (!in_array($roomType, $validRoomTypes)) {
-        die('No room type selected');
+        $errors[] = "Please choose a valid room type";
     }
 
     //Validate dates and make sure departure date is after arrival
     if (strtotime($arrivalDate) >= strtotime($departureDate)) {
-        die('Departure date must be after arrival date');
+        $errors[] = "Departure date must be after arrival date";
     }
 
     if (strtotime($arrivalDate) < strtotime('today')) {
-        die('Cannot book dates in the past');
+        $errors[] = "Cannot book dates in the past";
     }
 
     //Room-id matching
@@ -57,7 +64,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     if (!$room) {
         echo $roomType;
-        die('Room type not found');
+        $errors[] = "Room type not found";
     };
     $room_id = $room['id'];
 
@@ -77,6 +84,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         OR (arrival_date < :departureDate AND departure_date >= :departureDate)
         OR (arrival_date >= :arrivalDate AND departure_date <= :departureDate)
     )");
+
     $availabilityCheck->execute([
         ':room_id' => $room_id,
         ':arrivalDate' => $arrivalDate,
@@ -84,7 +92,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     ]);
 
     if ($availabilityCheck->fetchColumn() > 0) {
-        die('Room not available for selected dates');
+        $errors[] = "The chosen room is unfortunately not available for the selected dates";
     }
 
     //Insert booking information to booking table
@@ -109,7 +117,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
             $featureData = $featureCheck->fetch(PDO::FETCH_ASSOC);
 
             if (!$featureData) {
-                die("Invalid feature selected: $feature");
+                $errors[] = "Chosen feature $feature is invalid";
             }
 
             $feature_id = $featureData['id']; // Now we have the correct feature ID
@@ -120,6 +128,13 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
                 ':feature_id' => $feature_id
             ]);
         }
+    }
+    if (!empty($errors)) {
+        // Display errors and stop further processing
+        foreach ($errors as $error) {
+            echo "<p style='color: red;'>$error</p>";
+        }
+        exit; // Prevent further execution if errors are present
     }
 
     echo "Booking successfull!";
