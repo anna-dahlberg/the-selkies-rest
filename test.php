@@ -60,9 +60,9 @@ require(__DIR__ . '/vendor/autoload.php')
                 <div class="formGroup">
                     <label for="roomType">Room Type:</label>
                     <select id="roomType" name="roomType" required>
-                        <option value="Budget">Budget</option>
-                        <option value="Standard">Standard</option>
-                        <option value="Luxury">Luxury</option>
+                        <option value="budget">Budget</option>
+                        <option value="standard">Standard</option>
+                        <option value="luxury">Luxury</option>
                     </select>
                 </div>
 

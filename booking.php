@@ -20,7 +20,8 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL); //validate email
     $arrivalDate = $_POST['arrivalDate'];
     $departureDate = $_POST['departureDate'];
-    $roomType = $_POST['roomType'];
+    $roomType = ucfirst(strtolower($_POST['roomType']));
+
     $features = isset($_POST['features']) ? $_POST['features'] : [];
     //$transferCode = htmlspecialchars(trim($_POST['transferCode']));
 
@@ -49,6 +50,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $room = $roomStatement->fetch(PDO::FETCH_ASSOC);
 
     if (!$room) {
+        echo $roomType;
         die('Room type not found');
     };
     $room_id = $room['id'];
@@ -72,12 +74,23 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     $booking_id = $database->lastInsertId();
 
-    //Check if guest selected any features
+    // Check if guest selected any features
     if (!empty($features)) {
-        $featureStatement = $database->prepare("INSERT into rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)");
+        $featureStatement = $database->prepare("INSERT INTO rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)");
 
         foreach ($features as $feature) {
-            $feature_id = intval($feature);
+            // Query the features table to get the feature ID based on feature name
+            $featureCheck = $database->prepare("SELECT id FROM features WHERE name = :feature LIMIT 1");
+            $featureCheck->execute([':feature' => $feature]);
+            $featureData = $featureCheck->fetch(PDO::FETCH_ASSOC);
+
+            if (!$featureData) {
+                die("Invalid feature selected: $feature");
+            }
+
+            $feature_id = $featureData['id']; // Now we have the correct feature ID
+
+            // Insert the feature into rooms_bookings_features
             $featureStatement->execute([
                 ':booking_id' => $booking_id,
                 ':feature_id' => $feature_id
