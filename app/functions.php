@@ -13,3 +13,12 @@ function isValidUuid(string $uuid): bool
 
     return true;
 }
+
+
+//Function to connect to database 
+function connectionDatabase(): PDO
+{
+    $database = new PDO('sqlite:/Users/annadahlberg/dev/yrgo/assignments/the-selkies-rest/app/database/bookings.db');
+    $database->exec("PRAGMA foreign_keys = ON;");
+    return $database;
+}
