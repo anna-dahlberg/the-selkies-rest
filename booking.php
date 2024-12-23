@@ -130,7 +130,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         }
     }
     if (!empty($errors)) {
-        // Display errors and stop further processing
+        //Display errors and stop further processing
         foreach ($errors as $error) {
             echo "<p style='color: red;'>$error</p>";
         }
