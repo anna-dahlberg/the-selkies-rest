@@ -106,6 +106,53 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     $booking_id = $database->lastInsertId();
 
+    //Calculation for number of nights
+    $arrival = new DateTime($arrivalDate);
+    $departure = new DateTime($departureDate);
+    $nights = $departure->diff($arrival)->days;
+
+    //Get the room price
+    $roomPriceStatement = $database->prepare("SELECT price FROM rooms WHERE id = :room_id");
+    $roomPriceStatement->execute([
+        ':room_id' => $room_id
+    ]);
+    $roomPrice = $roomPriceStatement->fetch(PDO::FETCH_ASSOC)['price'];
+
+    // Calculate base room cost
+    $baseRoomCost = $roomPrice * $nights;
+
+    // Calculate features cost (per stay, not per night)
+    $featuresTotalCost = 0;
+    if (!empty($features)) {
+        $featurePriceStatement = $database->prepare("SELECT SUM(price) as total FROM features WHERE name IN (" . str_repeat('?,', count($features) - 1) . "?)");
+        $featurePriceStatement->execute($features);
+        $featuresTotalCost = $featurePriceStatement->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    // Check for and apply discount
+    $discountRate = 0;
+    if ($nights >= 3) {
+        $discountStmt = $database->prepare("SELECT discount_rate FROM discounts WHERE min_nights <= :nights ORDER BY discount_rate DESC LIMIT 1");
+        $discountStmt->execute([':nights' => $nights]);
+        $discountResult = $discountStmt->fetch(PDO::FETCH_ASSOC);
+        if ($discountResult) {
+            $discountRate = $discountResult['discount_rate'];
+        }
+    }
+
+    // Calculate total cost
+    $subtotal = $baseRoomCost + $featuresTotalCost;
+    $discount = $subtotal * $discountRate;
+    $totalCost = $subtotal - $discount;
+
+    // Update booking with cost information
+    $updateBookingStmt = $database->prepare("UPDATE bookings SET total_cost = :total_cost WHERE id = :booking_id");
+    $updateBookingStmt->execute([
+        ':total_cost' => $totalCost,
+        ':booking_id' => $booking_id
+    ]);
+
+
     // Check if guest selected any features
     if (!empty($features)) {
         $featureStatement = $database->prepare("INSERT INTO rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)");
