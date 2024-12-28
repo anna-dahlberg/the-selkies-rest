@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS bookings (
 	departure_date DATE,
 	guest_id INTEGER,
 	room_id INTEGER,
+	total_cost INTEGER,
 	FOREIGN KEY (guest_id) REFERENCES guests(id),
 	FOREIGN KEY (room_id) REFERENCES rooms(id)
 );
