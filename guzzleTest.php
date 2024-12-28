@@ -1,18 +1,26 @@
 <?php
 
-require 'vendor/autoload.php'; // Load Guzzle
+require __DIR__ . '/vendor/autoload.php'; // Load Guzzle
 
 use GuzzleHttp\Client;
 
 // Create a client to "talk" to the API
-$client = new Client(['base_uri' => 'https://www.yrgopelago.se/centralbank/']);
+$client = new Client();
 
-// Send your startcode to the API
-$response = $client->request('POST', 'startCode', [
-    'json' => [
-        'startcode' => '6f115b9a-564b-47ff-a842-0cb2d67c445f'
-    ]
-]);
+try {
+    $response = $client->post('https://www.yrgopelago.se/centralbank/transferCode', [
+        'headers' => [
+            'Content-Type' => 'application/json',
+        ],
+        'json' => [
+            'transferCode' => 'd3b3add3-d0fd-43c6-8780-db23dfc202eb',
+            'totalcost' => 2,
+        ],
+    ]);
 
-// Get the reply from the API
-echo $response->getBody(); // Show what the server replied
+    // Display the response
+    echo $response->getBody();
+} catch (\GuzzleHttp\Exception\RequestException $e) {
+    // Catch and display errors
+    echo $e->getMessage();
+}
