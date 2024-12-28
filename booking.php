@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-// require(__DIR__ . '/app/functions.php');
+require(__DIR__ . '/vendor/autoload.php');
+require(__DIR__ . '/functions.php');
 
 $errors = []; //empty array to catch errors
 
@@ -17,7 +18,7 @@ $statement = $database->query('SELECT * FROM bookings');
 $bookings = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 //Check if form data is set
-if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['departureDate'], $_POST['roomType']/*, $_POST['transferCode']*/)) {
+if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['departureDate'], $_POST['roomType'], $_POST['transferCode'])) {
 
     //Trim and sanitize inputs
     $name = htmlspecialchars(trim($_POST['name'])); //Remove white space and sanatize characters
@@ -28,16 +29,16 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $roomType = ucfirst(strtolower($_POST['roomType']));
 
     $features = isset($_POST['features']) ? $_POST['features'] : [];
-    //$transferCode = htmlspecialchars(trim($_POST['transferCode']));
+    $transferCode = htmlspecialchars(trim($_POST['transferCode']));
 
     if (!filter_var($sanitizedEmail, FILTER_VALIDATE_EMAIL)) { //Validate email
         $errors[] = "Please enter a valid e-mail adress";
     }
 
+    //Check for empty fields
     if (empty($name) || !$email || empty($arrivalDate) || empty($departureDate) || empty($roomType) /*|| empty($transferCode)*/) {
         $errors[] = "Please fill in all the required fields.";
     }
-    //Check for empty fields
 
     //Validate room types 
     $validRoomTypes = ['Budget', 'Standard', 'Luxury'];
@@ -52,6 +53,11 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     if (strtotime($arrivalDate) < strtotime('today')) {
         $errors[] = "Cannot book dates in the past";
+    }
+
+    //Validate transferCode
+    if (!isValidUuid($_POST['transferCode'])) {
+        $errors[] = "Invalid transfer code format";
     }
 
     //Room-id matching
@@ -78,7 +84,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $guest_id = $database->lastInsertId();
 
     //Check availability
-
     $availabilityCheck = $database->prepare("SELECT COUNT(*) FROM bookings WHERE room_id = :room_id AND (
             (arrival_date <= :arrivalDate AND departure_date > :arrivalDate)
         OR (arrival_date < :departureDate AND departure_date >= :departureDate)
@@ -176,6 +181,8 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
             ]);
         }
     }
+
+
     if (!empty($errors)) {
         //Display errors and stop further processing
         foreach ($errors as $error) {

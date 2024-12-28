@@ -15,6 +15,10 @@ function isValidUuid(string $uuid): bool
     return true;
 }
 
+// Function to verify transferCode against API
+
+
+
 
 //Function to connect to database 
 function connectionDatabase(): PDO

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require(__DIR__ . '/vendor/autoload.php');
+require(__DIR__ . '/functions.php');
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +29,9 @@ require(__DIR__ . '/vendor/autoload.php');
     </header>
 
     <main>
+        <?php
+
+        ?>
         <section class="bookingForm">
             <h2>Book Your Stay</h2>
 
