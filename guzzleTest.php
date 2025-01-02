@@ -13,8 +13,8 @@ try {
             'Content-Type' => 'application/json',
         ],
         'json' => [
-            'transferCode' => 'd3b3add3-d0fd-43c6-8780-db23dfc202eb',
-            'totalcost' => 2,
+            'transferCode' => $transferCode,
+            'totalcost' => $totalCost,
         ],
     ]);
 

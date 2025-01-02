@@ -15,12 +15,32 @@ function isValidUuid(string $uuid): bool
     return true;
 }
 
-// Function to verify transferCode against API
+// Function to send transferCode and total cost to the central bank API
+use GuzzleHttp\Client;
+
+function transferCodeSend(string $transferCode, float $totalCost): string
+{
+    try {
+        $client = new Client();
+        $response = $client->post('https://www.yrgopelago.se/centralbank/transferCode', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'transferCode' => $transferCode,
+                'totalCost' => $totalCost,
+            ],
+        ]);
+        return (string) $response->getBody();
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        return "error: " . $e->getMessage();
+    }
+}
 
 
 
-
-//Function to connect to database 
+// Function to connect to database 
 function connectionDatabase(): PDO
 {
     $database = new PDO('sqlite:/Users/annadahlberg/dev/yrgo/assignments/the-selkies-rest/app/database/bookings.db');

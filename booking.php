@@ -1,8 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
-require(__DIR__ . '/vendor/autoload.php');
+// require(__DIR__ . '/vendor/autoload.php');
 require(__DIR__ . '/functions.php');
 
 $errors = []; //empty array to catch errors
@@ -157,41 +156,55 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         ':booking_id' => $booking_id
     ]);
 
+    // Send the transfer code and total cost to the API
+    $response = transferCodeSend($transferCode, $totalCost);
+    var_dump($transferCode, $totalCost, $response);
 
-    // Check if guest selected any features
-    if (!empty($features)) {
-        $featureStatement = $database->prepare("INSERT INTO rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)");
 
-        foreach ($features as $feature) {
-            // Query the features table to get the feature ID based on feature name
-            $featureCheck = $database->prepare("SELECT id FROM features WHERE name = :feature LIMIT 1");
-            $featureCheck->execute([':feature' => $feature]);
-            $featureData = $featureCheck->fetch(PDO::FETCH_ASSOC);
+    // Check if the API response is successful
+    if ($response === "success") {
 
-            if (!$featureData) {
-                $errors[] = "Chosen feature $feature is invalid";
+        // Check if guest selected any features
+        if (!empty($features)) {
+            $featureStatement = $database->prepare("INSERT INTO rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)");
+
+            foreach ($features as $feature) {
+                // Query the features table to get the feature ID based on feature name
+                $featureCheck = $database->prepare("SELECT id FROM features WHERE name = :feature LIMIT 1");
+                $featureCheck->execute([':feature' => $feature]);
+                $featureData = $featureCheck->fetch(PDO::FETCH_ASSOC);
+
+                if (!$featureData) {
+                    $errors[] = "Chosen feature $feature is invalid";
+                }
+
+                $feature_id = $featureData['id']; // Now we have the correct feature ID
+
+                // Insert the feature into rooms_bookings_features
+                $featureStatement->execute([
+                    ':booking_id' => $booking_id,
+                    ':feature_id' => $feature_id
+                ]);
             }
-
-            $feature_id = $featureData['id']; // Now we have the correct feature ID
-
-            // Insert the feature into rooms_bookings_features
-            $featureStatement->execute([
-                ':booking_id' => $booking_id,
-                ':feature_id' => $feature_id
-            ]);
         }
     }
 
+    // Check if the API response is successful
+    if ($response !== "success") {
+        $errors[] = "Failed to send transfer code.";
+    }
 
+    // Check if there are any errors
     if (!empty($errors)) {
-        //Display errors and stop further processing
+        // Display errors
         foreach ($errors as $error) {
             echo "<p style='color: red;'>$error</p>";
         }
-        exit; // Prevent further execution if errors are present
+        exit; // Stop further execution if there are errors
     }
 
-    echo "Booking successfull!";
+    // If no errors, display success message
+    echo "<p style='color: green;'>Booking successful and transfer code sent!</p>";
 } else {
 
     die('Please fill out all required fields.'); //Stop script if field empty - necessary even though form field is required in html
