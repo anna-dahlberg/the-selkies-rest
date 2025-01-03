@@ -147,8 +147,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     // Calculate total cost
     $subtotal = $baseRoomCost + $featuresTotalCost;
-    $discount = $subtotal * $discountRate;
-    $totalCost = $subtotal - $discount;
+    $totalCost = $subtotal - $discountRate;
 
     // Update booking with cost information
     $updateBookingStmt = $database->prepare("UPDATE bookings SET total_cost = :total_cost WHERE id = :booking_id");
@@ -167,12 +166,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         $transferCode = $response['transferCode'];
 
         //Make deposit 
-        // $response = makeDeposit($username, $transferCode);
-        // var_dump($response);
-
-        //Make deposit 
         $depositResponse = makeDeposit($username, $transferCode);
-
 
         // Check if guest selected any features
         if (!empty($features)) {
@@ -198,7 +192,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
             }
         }
     }
-
     // Check if there are any errors
     if (!empty($errors)) {
         // Display errors
@@ -209,12 +202,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     }
 
     // If no errors, display success message with responses
-    echo "<pre>"; // For better formatting
-    var_dump([
-        'Transfer Response' => $response,
-        'Deposit Response' => $depositResponse
-    ]);
-    echo "</pre>";
     echo "<p style='color: green;'>Booking successful!</p>";
 } else {
 
