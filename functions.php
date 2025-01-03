@@ -48,6 +48,32 @@ function transferCodeSend(string $transferCode, float $totalCost): array
     }
 }
 
+//Function to deposit money
+use GuzzleHttp\Exception\RequestException;
+
+function makeDeposit(string $username, string $transferCode): string
+{
+    $client = new Client(); // Initialize Guzzle client
+
+    try {
+        // Make a POST request to the deposit endpoint
+        $response = $client->post('https://www.yrgopelago.se/centralbank/deposit', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'user' => $username,
+                'transferCode' => $transferCode,
+            ],
+        ]);
+
+        // Return the response body as a string
+        return $response->getBody()->getContents();
+    } catch (RequestException $e) {
+        // Return the error message if an exception occurs
+        return 'Error: ' . $e->getMessage();
+    }
+}
 
 // Function to connect to database 
 function connectionDatabase(): PDO

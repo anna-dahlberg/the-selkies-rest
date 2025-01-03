@@ -5,6 +5,7 @@ declare(strict_types=1);
 require(__DIR__ . '/functions.php');
 
 $errors = []; //empty array to catch errors
+$username = 'Anna';
 
 //Connection to database 
 $database = new PDO('sqlite:/Users/annadahlberg/dev/yrgo/assignments/the-selkies-rest/app/database/bookings.db');
@@ -99,6 +100,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         $errors[] = "The chosen room is unfortunately not available for the selected dates";
     }
 
+
     //Insert booking information to booking table
     $bookingStatement = $database->prepare("INSERT into bookings(guest_id, arrival_date, departure_date, room_id) VALUES(:guest_id, :arrivalDate, :departureDate, :room_id)");
     $bookingStatement->execute([
@@ -162,6 +164,10 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     // Check if the API response is successful
     if ($response === "success") {
+
+        //Make deposit 
+        $response = makeDeposit($username, $transferCode);
+        var_dump($response);
 
         // Check if guest selected any features
         if (!empty($features)) {
