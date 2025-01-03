@@ -17,26 +17,55 @@ function isValidUuid(string $uuid): bool
 
 // Function to send transferCode and total cost to the central bank API
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
-function transferCodeSend(string $transferCode, float $totalCost): string
+function transferCodeSend(string $transferCode, int $totalCost): array
 {
     try {
         $client = new Client();
-        $response = $client->post('https://www.yrgopelago.se/centralbank/transferCode', [
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
+        $response = $client->request('POST', 'https://www.yrgopelago.se/centralbank/transferCode', [
+            'form_params' => [
                 'transferCode' => $transferCode,
-                'totalCost' => $totalCost,
-            ],
+                'totalcost' => $totalCost
+            ]
         ]);
-        return (string) $response->getBody();
+
+        $body = $response->getBody();
+        $stringBody = (string)$body;
+        $arrayBody = json_decode($stringBody, true);
+
+        // Ensure the response is an array and return it
+        return is_array($arrayBody) ? $arrayBody : ['status' => 'error', 'message' => 'Invalid response format'];
+    } catch (ClientException $e) {
+        $errorResponse = $e->getResponse();
+        $errorContent = $errorResponse->getBody()->getContents();
+
+        // Decode the error content and return it
+        return json_decode($errorContent, true) ?: ['status' => 'error', 'message' => 'Unable to parse error response'];
     } catch (Exception $e) {
-        error_log($e->getMessage());
-        return "error: " . $e->getMessage();
+        // Handle any other exceptions
+        return ['status' => 'error', 'message' => $e->getMessage()];
     }
 }
+
+// {
+//     try {
+//         $client = new Client();
+//         $response = $client->post('https://www.yrgopelago.se/centralbank/transferCode', [
+//             'headers' => [
+//                 'Content-Type' => 'application/json',
+//             ],
+//             'json' => [
+//                 'transferCode' => $transferCode,
+//                 'totalCost' => $totalCost,
+//             ],
+//         ]);
+//         return (string) $response->getBody();
+//     } catch (Exception $e) {
+//         error_log($e->getMessage());
+//         return "error: " . $e->getMessage();
+//     }
+// }
 
 
 
