@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 require(__DIR__ . '/vendor/autoload.php');
 require(__DIR__ . '/functions.php');
-// require(__DIR__ . '/calendar.php');
 ?>
 
 <!DOCTYPE html>
@@ -15,10 +14,10 @@ require(__DIR__ . '/functions.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="assets/styles/styles.css">
+
+    <!-- Font link to source sans pro -->
     <link rel="stylesheet" href="https://use.typekit.net/ucb3kmg.css">
 
-    <!-- Flatpicker
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
     <title>The Selkies Rest</title>
 </head>
 
@@ -26,10 +25,13 @@ require(__DIR__ . '/functions.php');
 
     <header>
 
-        <div class="hero">
-            <h1>The Selkies Rest</h1>
+        <div class="hero-section">
+            <div class="hero-overlay">
+                <h1>The Selkies Rest</h1>
+                <p>Your coastal retreat in the heart of Scotland</p>
+                <a href="#book-now" class="hero-button">Book Now</a>
+            </div>
         </div>
-
     </header>
 
     <main>
@@ -37,7 +39,7 @@ require(__DIR__ . '/functions.php');
         <section class="bookingForm">
             <h2>Book Your Stay</h2>
 
-            <form action="booking.php" method="POST">
+            <form action="booking.php" method="POST" class="form">
 
 
                 <div class="formGroup">
@@ -104,19 +106,11 @@ require(__DIR__ . '/functions.php');
 
             </form>
         </section>
+
+        <section>
+
+        </section>
     </main>
-
-    <!-- <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="calendar.js"></script> -->
-
-    <!-- <script>
-        config = {
-            minDate: "2025-01-01",
-            maxDate: "2025-01-31"
-        }
-
-        flatpickr("input[type=date]", config);
-    </script> -->
 
 
 </body>
