@@ -4,7 +4,7 @@ declare(strict_types=1);
 require(__DIR__ . '/functions.php');
 
 $errors = []; //empty array to catch errors
-$username = 'Anna';
+$username = 'anna';
 
 //Connection to database 
 $database = new PDO('sqlite:/Users/annadahlberg/dev/yrgo/assignments/the-selkies-rest/app/database/bookings.db');
@@ -201,8 +201,30 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         exit; // Stop further execution if there are errors
     }
 
+    $imageUrls = [
+        "https://unsplash.com/photos/yak-reclining-on-grass-field-vi48b5vFtbo",
+        "https://unsplash.com/photos/domestic-yak-cKLr1zNnCzg",
+        "https://unsplash.com/photos/a-yak-lying-on-the-grass-KdabhKD0tmk",
+        "https://unsplash.com/photos/brown-yak-on-grass-field-u3XMyl-4OSY"
+    ];
+
+    $randomImageUrl = $imageUrls[rand(0, count($imageUrls) - 1)];
+
+    $jsonResponse = generateBookingResponse(
+        "Blackthorn Isle",
+        "The Selkie\'s Rest",
+        $arrivalDate,
+        $departureDate,
+        $totalCost,
+        3,
+        array_map(fn($feature) => ["name" => $feature, "cost" => 2.0], $features),
+        "Your adventure begins here! Thank you for booking with Selkies Rest. We’re looking forward to your visit!",
+        $randomImageUrl
+    );
+
     // If no errors, display success message with responses
-    echo "<p style='color: green;'>Booking successful!</p>";
+    header('Content-Type: application/json');
+    exit;
 } else {
 
     die('Please fill out all required fields.'); //Stop script if field empty - necessary even though form field is required in html

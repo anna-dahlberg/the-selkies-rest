@@ -10,8 +10,9 @@ function connectionDatabase(): PDO
     $database->exec("PRAGMA foreign_keys = ON;");
     return $database;
 }
-// Function to check if transferCode is valid 
 
+
+// Function to check if transferCode is valid 
 function isValidUuid(string $uuid): bool
 {
 
@@ -21,6 +22,8 @@ function isValidUuid(string $uuid): bool
 
     return true;
 }
+
+
 
 // Function to send transferCode and total cost to the central bank API
 use GuzzleHttp\Client;
@@ -78,7 +81,7 @@ function makeDeposit(string $username, string $transferCode): string
         ]);
 
         $responseBody = $response->getBody()->getContents();
-        echo "API Response: " . $responseBody . "\n";
+        // echo "API Response: " . $responseBody . "\n";
         return $responseBody;
     } catch (RequestException $e) {
         if ($e->hasResponse()) {
@@ -87,4 +90,34 @@ function makeDeposit(string $username, string $transferCode): string
         }
         return 'Error: ' . $e->getMessage();
     }
+}
+
+
+//Function to generate JSON response
+function generateBookingResponse(
+    string $island,
+    string $hotel,
+    string $arrivalDate,
+    string $departureDate,
+    float $totalCost,
+    int $stars,
+    array $features = [],
+    string $greeting = "Your adventure begins here! Thank you for booking with Selkies Rest. We’re looking forward to your visit!",
+    string $randomImageUrl = ""
+) {
+    $response = [
+        "island" => $island,
+        "hotel" => $hotel,
+        "arrival_date" => $arrivalDate,
+        "departure_date" => $departureDate,
+        "total_cost" => number_format($totalCost, 2),
+        "stars" => $stars,
+        "features" => $features,
+        "additional_info" => [
+            "greeting" => $greeting,
+            "imageUrl" => $randomImageUrl
+        ]
+    ];
+
+    echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 }
