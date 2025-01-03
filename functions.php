@@ -51,12 +51,39 @@ function transferCodeSend(string $transferCode, float $totalCost): array
 //Function to deposit money
 use GuzzleHttp\Exception\RequestException;
 
+// function makeDeposit(string $username, string $transferCode): string
+// {
+//     $client = new Client(); // Initialize Guzzle client
+
+//     try {
+//         // Make a POST request to the deposit endpoint
+//         $response = $client->post('https://www.yrgopelago.se/centralbank/deposit', [
+//             'headers' => [
+//                 'Content-Type' => 'application/json',
+//             ],
+//             'json' => [
+//                 'user' => $username,
+//                 'transferCode' => $transferCode,
+//             ],
+//         ]);
+
+//         // Return the response body as a string
+//         return $response->getBody()->getContents();
+//     } catch (RequestException $e) {
+//         // Return the error message if an exception occurs
+//         return 'Error: ' . $e->getMessage();
+//     }
+// }
+
 function makeDeposit(string $username, string $transferCode): string
 {
-    $client = new Client(); // Initialize Guzzle client
-
+    $client = new Client();
     try {
-        // Make a POST request to the deposit endpoint
+        // Echo the data being sent
+        echo "Sending deposit request with: \n";
+        echo "Username: " . $username . "\n";
+        echo "TransferCode: " . $transferCode . "\n";
+
         $response = $client->post('https://www.yrgopelago.se/centralbank/deposit', [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -67,10 +94,14 @@ function makeDeposit(string $username, string $transferCode): string
             ],
         ]);
 
-        // Return the response body as a string
-        return $response->getBody()->getContents();
+        $responseBody = $response->getBody()->getContents();
+        echo "API Response: " . $responseBody . "\n";
+        return $responseBody;
     } catch (RequestException $e) {
-        // Return the error message if an exception occurs
+        if ($e->hasResponse()) {
+            $errorBody = $e->getResponse()->getBody()->getContents();
+            return 'Error Response: ' . $errorBody;
+        }
         return 'Error: ' . $e->getMessage();
     }
 }

@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-// require(__DIR__ . '/vendor/autoload.php');
 require(__DIR__ . '/functions.php');
 
 $errors = []; //empty array to catch errors
@@ -160,14 +159,20 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     // Send the transfer code and total cost to the API
     $response = transferCodeSend($transferCode, $totalCost);
+    $depositResponse = "Not attempted"; // Initialize variable
 
 
     // Check if the API response is successful
-    if ($response === "success") {
+    if (isset($response['status']) && $response['status'] === "success") {
+        $transferCode = $response['transferCode'];
 
         //Make deposit 
-        $response = makeDeposit($username, $transferCode);
-        var_dump($response);
+        // $response = makeDeposit($username, $transferCode);
+        // var_dump($response);
+
+        //Make deposit 
+        $depositResponse = makeDeposit($username, $transferCode);
+
 
         // Check if guest selected any features
         if (!empty($features)) {
@@ -203,8 +208,14 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         exit; // Stop further execution if there are errors
     }
 
-    // If no errors, display success message
-    echo "<p style='color: green;'>Booking successful and transfer code sent!</p>";
+    // If no errors, display success message with responses
+    echo "<pre>"; // For better formatting
+    var_dump([
+        'Transfer Response' => $response,
+        'Deposit Response' => $depositResponse
+    ]);
+    echo "</pre>";
+    echo "<p style='color: green;'>Booking successful!</p>";
 } else {
 
     die('Please fill out all required fields.'); //Stop script if field empty - necessary even though form field is required in html
