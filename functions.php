@@ -19,7 +19,7 @@ function isValidUuid(string $uuid): bool
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
-function transferCodeSend(string $transferCode, int $totalCost): array
+function transferCodeSend(string $transferCode, float $totalCost): array
 {
     try {
         $client = new Client();
@@ -47,26 +47,6 @@ function transferCodeSend(string $transferCode, int $totalCost): array
         return ['status' => 'error', 'message' => $e->getMessage()];
     }
 }
-
-// {
-//     try {
-//         $client = new Client();
-//         $response = $client->post('https://www.yrgopelago.se/centralbank/transferCode', [
-//             'headers' => [
-//                 'Content-Type' => 'application/json',
-//             ],
-//             'json' => [
-//                 'transferCode' => $transferCode,
-//                 'totalCost' => $totalCost,
-//             ],
-//         ]);
-//         return (string) $response->getBody();
-//     } catch (Exception $e) {
-//         error_log($e->getMessage());
-//         return "error: " . $e->getMessage();
-//     }
-// }
-
 
 
 // Function to connect to database 

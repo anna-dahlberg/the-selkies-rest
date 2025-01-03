@@ -158,7 +158,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     // Send the transfer code and total cost to the API
     $response = transferCodeSend($transferCode, $totalCost);
-    var_dump($transferCode, $totalCost, $response);
 
 
     // Check if the API response is successful
@@ -187,11 +186,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
                 ]);
             }
         }
-    }
-
-    // Check if the API response is successful
-    if ($response !== "success") {
-        $errors[] = "Failed to send transfer code.";
     }
 
     // Check if there are any errors
