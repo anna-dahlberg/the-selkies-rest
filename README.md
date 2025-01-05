@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS discounts (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name VARCHAR(30),
 	min_nights INTEGER,
-	discount_rate FLOAT
+	discount_rate INTEGER
 );
 ```
 
@@ -88,5 +88,5 @@ VALUES ('Sauna',2),
 		('Radio', 2);
 
 INSERT INTO discounts (name, min_nights, discount_rate)
-VALUES ('Selkie Stay Discount', 3, 0.2);
+VALUES ('Selkie Stay Discount', 3, 2);
 ```

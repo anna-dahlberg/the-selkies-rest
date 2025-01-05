@@ -89,6 +89,7 @@ header {
 
 main {
     padding: 20px;
+    background-color: var(--selkie-grey);
 }
 
 .bookingForm {

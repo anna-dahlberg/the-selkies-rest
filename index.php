@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require(__DIR__ . '/vendor/autoload.php');
 require(__DIR__ . '/functions.php');
+require(__DIR__ . '/calendar.php');
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +14,11 @@ require(__DIR__ . '/functions.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Styles -->
     <link rel="stylesheet" href="assets/styles/styles.css">
+
+    <!-- Calendar styles -->
+    <link href="calendar.css" type="text/css" rel="stylesheet" />
 
     <!-- Font link to source sans pro -->
     <link rel="stylesheet" href="https://use.typekit.net/ucb3kmg.css">
@@ -107,8 +112,12 @@ require(__DIR__ . '/functions.php');
             </form>
         </section>
 
-        <section>
+        <section class="bookingCalendar">
+            <?php
+            $calendar = new Calendar();
 
+            echo $calendar->show();
+            ?>
         </section>
     </main>
 
