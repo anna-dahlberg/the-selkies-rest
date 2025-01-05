@@ -5,8 +5,10 @@ require(__DIR__ . '/vendor/autoload.php');
 
 // Function to connect to database 
 function connectionDatabase(): PDO
-{
+
+{   //Connection to database 
     $database = new PDO('sqlite:/Users/annadahlberg/dev/yrgo/assignments/the-selkies-rest/app/database/bookings.db');
+    // Enable foreign key support
     $database->exec("PRAGMA foreign_keys = ON;");
     return $database;
 }

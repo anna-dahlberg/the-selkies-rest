@@ -8,7 +8,6 @@ $username = 'anna';
 
 //Connection to database 
 $database = new PDO('sqlite:/Users/annadahlberg/dev/yrgo/assignments/the-selkies-rest/app/database/bookings.db');
-
 // Enable foreign key support
 $database->exec("PRAGMA foreign_keys = ON;");
 
@@ -141,9 +140,11 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     // Calculate features cost (per stay, not per night)
     $featuresTotalCost = 0;
     $validFeatures = [];
+
     if (!empty($features)) {
         $placeholders = str_repeat('?,', count($features) - 1) . '?';
         $featureCheck = $database->prepare("SELECT id, name, price FROM features WHERE name IN ($placeholders)");
+
         $featureCheck->execute($features);
         $validFeatures = $featureCheck->fetchAll(PDO::FETCH_ASSOC);
 

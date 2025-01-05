@@ -83,9 +83,9 @@ VALUES ('Budget', 2),
 	('Luxury', 6);
 
 INSERT INTO features ("name", price)
-VALUES ('Sauna',2),
-		('Bicycles', 2),
-		('Radio', 2);
+VALUES ('sauna',2),
+		('bicycle', 2),
+		('radio', 2);
 
 INSERT INTO discounts (name, min_nights, discount_rate)
 VALUES ('Selkie Stay Discount', 3, 2);
