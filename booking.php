@@ -126,13 +126,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     // Calculate base room cost
     $baseRoomCost = $roomPrice * $nights;
 
-    // Calculate features cost (per stay, not per night)
-    $featuresTotalCost = 0;
-    if (!empty($features)) {
-        $featurePriceStatement = $database->prepare("SELECT SUM(price) as total FROM features WHERE name IN (" . str_repeat('?,', count($features) - 1) . "?)");
-        $featurePriceStatement->execute($features);
-        $featuresTotalCost = $featurePriceStatement->fetch(PDO::FETCH_ASSOC)['total'];
-    }
 
     // Check for and apply discount
     $discountRate = 0;
@@ -145,9 +138,71 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         }
     }
 
+    // Calculate features cost (per stay, not per night)
+    $featuresTotalCost = 0;
+    $validFeatures = [];
+    if (!empty($features)) {
+        $placeholders = str_repeat('?,', count($features) - 1) . '?';
+        $featureCheck = $database->prepare("SELECT id, name, price FROM features WHERE name IN ($placeholders)");
+        $featureCheck->execute($features);
+        $validFeatures = $featureCheck->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($validFeatures) !== count($features)) {
+            $errors[] = "One or more selected features are invalid";
+        }
+
+        $featuresTotalCost = array_sum(array_column($validFeatures, 'price'));
+    }
+
     // Calculate total cost
     $subtotal = $baseRoomCost + $featuresTotalCost;
     $totalCost = $subtotal - $discountRate;
+
+    $updateBookingStmt = $database->prepare("UPDATE bookings SET total_cost = :total_cost WHERE id = :booking_id");
+
+    try {
+        $database->beginTransaction();
+
+        // Insert booking
+        $bookingStatement->execute([
+            ':guest_id' => $guest_id,
+            ':arrivalDate' => $arrivalDate,
+            ':departureDate' => $departureDate,
+            ':room_id' => $room_id
+        ]);
+        $booking_id = $database->lastInsertId();
+
+        // Update booking with cost
+        $updateBookingStmt->execute([
+            ':total_cost' => $totalCost,
+            ':booking_id' => $booking_id
+        ]);
+
+        // Insert features if any
+        if (!empty($validFeatures)) {
+            $featureStatement = $database->prepare(
+                "INSERT INTO rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)"
+            );
+
+            foreach ($validFeatures as $feature) {
+                $featureStatement->execute([
+                    ':booking_id' => $booking_id,
+                    ':feature_id' => $feature['id']
+                ]);
+            }
+        }
+
+        // Only process transfer code after database operations succeed
+        $response = transferCodeSend($transferCode, $totalCost);
+        if (!isset($response['status']) || $response['status'] !== "success") {
+            throw new Exception("Transfer code verification failed");
+        }
+
+        $database->commit();
+    } catch (Exception $e) {
+        $database->rollBack();
+        $errors[] = "Booking failed: " . $e->getMessage();
+    }
 
     // Update booking with cost information
     $updateBookingStmt = $database->prepare("UPDATE bookings SET total_cost = :total_cost WHERE id = :booking_id");
@@ -167,30 +222,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
         //Make deposit 
         $depositResponse = makeDeposit($username, $transferCode);
-
-        // Check if guest selected any features
-        if (!empty($features)) {
-            $featureStatement = $database->prepare("INSERT INTO rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)");
-
-            foreach ($features as $feature) {
-                // Query the features table to get the feature ID based on feature name
-                $featureCheck = $database->prepare("SELECT id FROM features WHERE name = :feature LIMIT 1");
-                $featureCheck->execute([':feature' => $feature]);
-                $featureData = $featureCheck->fetch(PDO::FETCH_ASSOC);
-
-                if (!$featureData) {
-                    $errors[] = "Chosen feature $feature is invalid";
-                }
-
-                $feature_id = $featureData['id']; // Now we have the correct feature ID
-
-                // Insert the feature into rooms_bookings_features
-                $featureStatement->execute([
-                    ':booking_id' => $booking_id,
-                    ':feature_id' => $feature_id
-                ]);
-            }
-        }
     }
     // Check if there are any errors
     if (!empty($errors)) {

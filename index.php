@@ -18,7 +18,7 @@ require(__DIR__ . '/calendar.php');
     <link rel="stylesheet" href="assets/styles/styles.css">
 
     <!-- Calendar styles -->
-    <link href="calendar.css" type="text/css" rel="stylesheet" />
+    <link href="calendar.css" rel="stylesheet" />
 
     <!-- Font link to source sans pro -->
     <link rel="stylesheet" href="https://use.typekit.net/ucb3kmg.css">
@@ -114,9 +114,19 @@ require(__DIR__ . '/calendar.php');
 
         <section class="bookingCalendar">
             <?php
-            $calendar = new Calendar();
+            $rooms = [
+                1 => 'Budget Room',
+                2 => 'Standard Room',
+                3 => 'Luxury Room'
+            ];
 
-            echo $calendar->show();
+            foreach ($rooms as $room_id => $room_name) {
+                echo '<div class="calendar-container">';
+                echo '<h3 class="room-title">' . htmlspecialchars($room_name) . '</h3>';
+                $calendar = new Calendar($room_id);
+                echo $calendar->show();
+                echo '</div>';
+            }
             ?>
         </section>
     </main>

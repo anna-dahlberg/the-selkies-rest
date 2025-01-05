@@ -1,13 +1,19 @@
-<!-- Source code credit to: https://youthsforum.com/2020/08/build-a-simple-calendar-in-website-using-php-with-source-code/ -->
-
 <?php
+
+declare(strict_types=1);
+
+// Source code credit to: https://youthsforum.com/2020/08/build-a-simple-calendar-in-website-using-php-with-source-code/
+
 class Calendar
 {
 
     /* Constructor */
-    public function __construct()
+    public function __construct($roomId)
     {
         $this->naviHref = htmlentities($_SERVER['PHP_SELF']);
+        $this->roomId = $roomId;
+        // Add debug output
+        error_log("Calendar created for room_id: " . $roomId);
     }
 
     /********************* PROPERTY ********************/
@@ -19,6 +25,7 @@ class Calendar
     private $currentDate = null;
     private $daysInMonth = 0;
     private $naviHref = null;
+    private $roomId = null;
 
     /********************* PUBLIC **********************/
 
@@ -28,27 +35,11 @@ class Calendar
         $year  = 2025; //Fixed year
         $month = 1; //Fixed month
 
-        if (null == $year && isset($_GET['year'])) {
-
-            $year = $_GET['year'];
-        } else if (null == $year) {
-
-            $year = date("Y", time());
-        }
-
-        if (null == $month && isset($_GET['month'])) {
-
-            $month = $_GET['month'];
-        } else if (null == $month) {
-
-            $month = date("m", time());
-        }
-
         $this->currentYear = $year;
         $this->currentMonth = $month;
         $this->daysInMonth = $this->_daysInMonth($month, $year);
 
-        $content = '<div id="calendar">' .
+        $content = '<div id="calendar" class="room-' . $this->roomId . '">' .
             '<div class="box">' .
             $this->_createNavi() .
             '</div>' .
@@ -61,7 +52,6 @@ class Calendar
 
         // Create weeks in a month
         for ($i = 0; $i < $weeksInMonth; $i++) {
-
             //Create days in a week
             for ($j = 1; $j <= 7; $j++) {
                 $content .= $this->_showDay($i * 7 + $j);
@@ -79,38 +69,48 @@ class Calendar
     /********************* PRIVATE **********************/
 
     /* Function to create the li element for ul */
+
     private function _showDay($cellNumber)
     {
+        // Only fetch booked dates once per calendar instance
+        static $bookedDates = null;
+        static $lastRoomId = null;
+
+        // Reset bookedDates if we're showing a different room
+        if ($lastRoomId !== $this->roomId) {
+            $bookedDates = null;
+            $lastRoomId = $this->roomId;
+        }
+
+        if ($bookedDates === null) {
+            $bookedDates = $this->_getBookedDates($this->currentYear, $this->currentMonth);
+            // Add debug output
+            error_log("Fetched booked dates for room_id {$this->roomId}: " . print_r($bookedDates, true));
+        }
 
         if ($this->currentDay == 0) {
-
             $firstDayOfTheWeek = date('N', strtotime($this->currentYear . '-' . $this->currentMonth . '-01'));
-
             if (intval($cellNumber) == intval($firstDayOfTheWeek)) {
-
                 $this->currentDay = 1;
             }
         }
 
         if (($this->currentDay != 0) && ($this->currentDay <= $this->daysInMonth)) {
-
             $this->currentDate = date('Y-m-d', strtotime($this->currentYear . '-' . $this->currentMonth . '-' . ($this->currentDay)));
-
             $cellContent = $this->currentDay;
-
             $this->currentDay++;
         } else {
-
             $this->currentDate = null;
-
             $cellContent = null;
         }
 
+        $isBooked = in_array($this->currentDate, $bookedDates);
+        $class = ($cellNumber % 7 == 1 ? ' start ' : ($cellNumber % 7 == 0 ? ' end ' : ' ')) .
+            ($cellContent == null ? 'mask' : '') .
+            ($isBooked ? ' booked' : '');
 
-        return '<li id="li-' . $this->currentDate . '" class="' . ($cellNumber % 7 == 1 ? ' start ' : ($cellNumber % 7 == 0 ? ' end ' : ' ')) .
-            ($cellContent == null ? 'mask' : '') . '">' . $cellContent . '</li>';
+        return '<li id="li-' . $this->currentDate . '" class="' . $class . '" data-room="' . $this->roomId . '">' . $cellContent . '</li>';
     }
-
     /* create navigation */
     private function _createNavi()
     {
@@ -195,69 +195,44 @@ class Calendar
         return date('t', strtotime($year . '-' . $month . '-01'));
     }
 
-    // My own functions for displaying booked dates in calendar
-
-    private function _showDay($cellNumber)
-    {
-        // Only fetch booked dates once, store them in an array
-        static $bookedDates = null;
-
-        if ($bookedDates === null) {
-            $bookedDates = $this->_getBookedDates($this->currentYear, $this->currentMonth);
-        }
-
-        if ($this->currentDay == 0) {
-            $firstDayOfTheWeek = date('N', strtotime($this->currentYear . '-' . $this->currentMonth . '-01'));
-
-            if (intval($cellNumber) == intval($firstDayOfTheWeek)) {
-                $this->currentDay = 1;
-            }
-        }
-
-        if (($this->currentDay != 0) && ($this->currentDay <= $this->daysInMonth)) {
-            $this->currentDate = date('Y-m-d', strtotime($this->currentYear . '-' . $this->currentMonth . '-' . ($this->currentDay)));
-            $cellContent = $this->currentDay;
-            $this->currentDay++;
-        } else {
-            $this->currentDate = null;
-            $cellContent = null;
-        }
-
-        // Add class 'booked' if the current date is in the bookedDates array
-        $isBooked = in_array($this->currentDate, $bookedDates);
-        $class = ($cellNumber % 7 == 1 ? ' start ' : ($cellNumber % 7 == 0 ? ' end ' : ' ')) .
-            ($cellContent == null ? 'mask' : '') .
-            ($isBooked ? ' booked' : '');
-
-        return '<li id="li-' . $this->currentDate . '" class="' . $class . '">' . $cellContent . '</li>';
-    }
-
     /* Fetch booked dates from the database for the specified month and year. */
 
     private function _getBookedDates($year, $month)
     {
-        $db = new PDO('sqlite:your-database-file.sqlite');
-        $query = "SELECT arrival_date, departure_date FROM bookings 
-              WHERE strftime('%Y', arrival_date) = :year 
-              AND strftime('%m', arrival_date) = :month";
+        try {
+            $db = new PDO('sqlite:app/database/bookings.db');
+            $query = "SELECT arrival_date, departure_date FROM bookings 
+                     WHERE strftime('%Y', arrival_date) = :year 
+                     AND strftime('%m', arrival_date) = :month
+                     AND room_id = :room_id";
 
-        $stmt = $db->prepare($query);
-        $stmt->bindValue(':year', $year, PDO::PARAM_STR);
-        $stmt->bindValue(':month', sprintf('%02d', $month), PDO::PARAM_STR);
-        $stmt->execute();
+            $stmt = $db->prepare($query);
+            $stmt->bindValue(':year', $year, PDO::PARAM_STR);
+            $stmt->bindValue(':month', sprintf('%02d', $month), PDO::PARAM_STR);
+            $stmt->bindValue(':room_id', $this->roomId, PDO::PARAM_INT);
+            $stmt->execute();
 
-        $bookedDates = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $start = new DateTime($row['arrival_date']);
-            $end = new DateTime($row['departure_date']);
+            // Add debug output
+            error_log("Running query for room_id: {$this->roomId}, year: {$year}, month: {$month}");
 
-            // Generate all dates between arrival and departure
-            while ($start <= $end) {
-                $bookedDates[] = $start->format('Y-m-d');
-                $start->modify('+1 day');
+            $bookedDates = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $start = new DateTime($row['arrival_date']);
+                $end = new DateTime($row['departure_date']);
+
+                // Generate all dates between arrival and departure
+                while ($start <= $end) {
+                    $bookedDates[] = $start->format('Y-m-d');
+                    $start->modify('+1 day');
+                }
             }
-        }
 
-        return $bookedDates;
+            // Add debug output
+            error_log("Found " . count($bookedDates) . " booked dates for room_id {$this->roomId}");
+            return $bookedDates;
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return [];
+        }
     }
 }

@@ -8,6 +8,8 @@
     --selkie-grey: #9DA7B6;
     --loch-foam: #F4F1E7;
     --heather-bloom: #BAA7C1;
+    --brick-coral: #C97A63;
+    
 }
 
 /*******************************Calendar Top Navigation*********************************/
@@ -131,7 +133,16 @@ div#calendar{
   }
 
   div#calendar ul.dates li.booked {
-    background-color: var(--highland-mist); /* Change to desired color */
-    color: white;
-    font-weight: bold;
+    background-color: var(--brick-coral); /* Change to desired color */
+    color: var(--loch-foam);
+}
+
+.calendar-container {
+    margin: 20px 0;
+}
+.room-title {
+    text-align: center;
+    margin-bottom: 10px;
+    color: var(--highland-mist);
+    font-size: 1.2em;
 }
