@@ -5,10 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- General styles -->
-    <link rel="stylesheet" href="test.css">
+    <!-- Global & main styles -->
+    <link rel="stylesheet" href="/assets/styles/global.css">
+
+    <!-- Header styles -->
+    <link rel="stylesheet" href="/assets/styles/header.css">
+
     <!-- Calendar styles -->
-    <link href="calendar.css" rel="stylesheet" />
+    <link href="/assets/styles/calendar.css" rel="stylesheet" />
 
     <!-- Link to font style sheet -->
     <link rel="stylesheet" href="https://use.typekit.net/roz6xva.css">
