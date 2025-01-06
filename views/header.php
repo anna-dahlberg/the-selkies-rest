@@ -10,8 +10,9 @@
     <!-- Calendar styles -->
     <link href="calendar.css" rel="stylesheet" />
 
-    <!-- Font link to source sans pro -->
-    <link rel="stylesheet" href="https://use.typekit.net/ucb3kmg.css">
+    <!-- Link to font style sheet -->
+    <link rel="stylesheet" href="https://use.typekit.net/roz6xva.css">
+
     <title>The Selkie's Rest</title>
 </head>
 
