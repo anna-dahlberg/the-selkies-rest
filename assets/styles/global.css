@@ -1,0 +1,91 @@
+/* || Root styling & variables */
+
+:root {
+    /* Color variables */
+    --kelp-forest: #334532;
+    --highland-mist: #202F42;
+    --selkie-grey: #9DA7B6;
+    --loch-foam: #F4F1E7;
+    --heather-bloom: #BAA7C1;
+
+}
+
+/* || Global styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    /* font-size: 16px; */
+    background-color: var(--highland-mist);
+    font-family: 'source-sans-3';
+}
+
+
+/* || Main page styling */
+
+main {
+    width: 86rem;
+    height: 235rem;
+    background-color: var(--loch-foam);
+    border-radius: 1.25rem; 
+    padding: 7rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 9rem;
+}
+
+.mainContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* || Hotel info section */
+
+.hotelContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.hotelInfo {
+    color: var(--kelp-forest);
+    width: 41rem;
+}
+
+.hotelInfo h2 {
+    font-family: 'playfair-display';
+    font-weight: 700;
+    font-size: 3rem;
+    text-align: right;
+}
+
+.hotelInfo p {
+    font-size: 1.25rem;
+    padding-top: 2rem;
+    font-weight: 400;
+}
+
+/* || Room info section */
+
+.roomContainer {
+    color: var(--kelp-forest);
+}
+
+.titleContainer {
+    text-align: center;
+    font-family: 'playfair-display';
+    font-size: 3.4rem;
+}
+
+.titleContainer h3 {
+    font-style: italic;
+    font-weight: 300;
+    text-decoration: 2px underline;
+    color: var(--highland-mist);
+}
+
+/* || Footer styling */

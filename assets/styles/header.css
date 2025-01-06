@@ -1,0 +1,64 @@
+/* || Header styling */
+
+header {
+    font-family: 'playfair-display';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+header h1 {
+    font-size: 4rem;
+    font-weight: 300;
+    text-align: center;
+    color: var(--loch-foam);
+    padding: 1rem 0;
+}
+
+.heroContainer {
+    width: 86rem;
+    height: 50rem;
+    background-color: var(--loch-foam);
+    border-radius: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.heroContent {
+    position: absolute;
+    text-align: center;
+}
+
+.heroContent p {
+    font-size: 3rem;
+    font-style: italic;
+    margin-bottom: 3rem;
+    color: var(--loch-foam);
+}
+
+.ctaButton {
+    font-family: "source-sans-3";
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background-color: var(--heather-bloom);
+    color: var(--loch-foam);
+    border: none;
+    cursor: pointer;
+}
+
+.ctaButton:hover {
+    background-color: var(--kelp-forest);
+}
+
+.ctaButton:visited {
+    background-color: var(--selkie-grey);
+}
+.starSection {
+    height: 9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
