@@ -120,14 +120,18 @@ require(__DIR__ . '/calendar.php');
                 3 => 'Luxury Room'
             ];
 
-            foreach ($rooms as $room_id => $room_name) {
-                echo '<div class="calendar-container">';
-                echo '<h3 class="room-title">' . htmlspecialchars($room_name) . '</h3>';
+            foreach ($rooms as $room_id => $room_name):
                 $calendar = new Calendar($room_id);
-                echo $calendar->show();
-                echo '</div>';
-            }
             ?>
+
+                <div class="calendar-container">
+                    <?php echo $calendar->show(); ?>
+                </div>
+
+            <?php
+            endforeach;
+            ?>
+
         </section>
     </main>
 
