@@ -148,8 +148,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $subtotal = $baseRoomCost + $featuresTotalCost;
     $totalCost = $subtotal - $discountRate;
 
-    // $updateBookingStmt = $database->prepare("UPDATE bookings SET total_cost = :total_cost WHERE id = :booking_id");
-
     try {
         $database->beginTransaction();
 
