@@ -15,7 +15,10 @@
     <link rel="stylesheet" href="/assets/styles/styles.css">
 
     <!-- Calendar styles -->
-    <link href="/assets/styles/calendar.css" rel="stylesheet" />
+    <link href="/assets/styles/calendar.css" rel="stylesheet">
+
+    <!-- Footer styles -->
+    <link href="/assets/styles/footer.css" rel="stylesheet">
 
     <!-- Link to font style sheet -->
     <link rel="stylesheet" href="https://use.typekit.net/roz6xva.css">
