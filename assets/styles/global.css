@@ -24,14 +24,18 @@ html {
     font-family: 'source-sans-3';
 }
 
+h1,h2,h3,h4, .form {
+    font-family: 'playfair-display';
+}
+
 
 /* || Main page styling */
 
 main {
     width: 86rem;
-    height: 235rem;
+    height: auto;
     background-color: var(--loch-foam);
-    border-radius: 1.25rem; 
+    border-radius: 3rem; 
     padding: 7rem 3.5rem;
     display: flex;
     flex-direction: column;
@@ -58,7 +62,6 @@ main {
 }
 
 .hotelInfo h2 {
-    font-family: 'playfair-display';
     font-weight: 700;
     font-size: 3rem;
     text-align: right;
@@ -73,12 +76,11 @@ main {
 /* || Room info section */
 
 .roomContainer {
-    color: var(--kelp-forest);
+    color: var(--highland-mist);
 }
 
 .titleContainer {
     text-align: center;
-    font-family: 'playfair-display';
     font-size: 3.4rem;
 }
 
@@ -87,6 +89,181 @@ main {
     font-weight: 300;
     text-decoration: 2px underline;
     color: var(--highland-mist);
+    padding-bottom: 3.8rem;
+}
+
+.roomInfoContainer {
+    width: 1260px;
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    justify-content: space-evenly;  
+}
+
+.roomTitle {
+    font-size: 3rem;
+    font-style: italic;
+    font-weight: 300;
+    padding-bottom: 1rem;
+}
+
+.roomText {
+    width: 25rem;
+    font-size: 1.15rem;
+    font-weight: 300;
+}
+
+.roomImg {
+    max-height: 350px;
+}
+
+.room2 {
+    flex-direction: row-reverse;
+}
+
+.room1, .room2 {
+    padding-bottom: 8.8rem;
+}
+
+/* || Feature info section */
+
+.featureContainer {
+    color: var(--highland-mist);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.featureTitle {
+    font-weight: 600;
+    font-size: 3.5rem;
+    padding-bottom: 2rem;
+}
+
+.featureInfo {
+    width: 48rem;
+}
+
+.featureText {
+    font-size: 1.25rem;
+}
+
+/* || Booking container and form styling */
+
+.bookingSection {
+    background-color: var(--highland-mist);
+    border-radius: 3rem;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bookingTitle {
+    color: var(--loch-foam);
+    text-align: center;
+    font-size: 4rem;
+    font-weight: 700;
+    padding: 1.4rem 0 2.5rem 0;
+}
+
+.bookingContainer {
+    width: 70rem;
+    margin-bottom: 2rem;
+}
+
+.bookingForm {
+    width: 25rem;
+    height: 47rem;
+    background-color: var(--loch-foam);
+    border-radius: 1.25rem;
+    padding: 1.2rem 2rem;
+}
+
+.formContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    font-weight: 700;
+    color: var(--highland-mist);
+}
+
+.formGroupFlex {
+    display: flex;
+    flex-direction: column;
+}
+
+input, select {
+    font-family: 'playfair-display';
+    height: 2rem;
+    border-radius: 5px;
+    border: 1px solid var(--highland-mist);
+    background-color: var(--loch-foam);
+}
+
+label {
+    padding-bottom: 5px;
+}
+
+fieldset {
+    border-radius: 5px;
+    border: none;
+    background-color: var(--loch-foam);
+    display: flex;
+    flex-direction: column;
+    
+}
+
+#fw400 {
+    font-weight: 400;
+}
+
+.checkboxContainer {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.formGroup input {
+    padding: 8px;
+}
+
+input[type="checkbox"] {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+input[type="checkbox"]:checked {
+    accent-color: var(--kelp-forest);
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.formButton {
+    width: 7.5rem;
+    height: 2.5rem;
+    background-color: var(--heather-bloom);
+    color: var(--loch-foam);
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'source-sans-3';
+    border: none;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+}
+
+.formButton:hover{
+    background-color: var(--kelp-forest);
 }
 
 /* || Footer styling */

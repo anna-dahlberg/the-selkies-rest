@@ -20,13 +20,16 @@ header h1 {
     width: 86rem;
     height: 50rem;
     background-color: var(--loch-foam);
-    border-radius: 1.25rem;
+    border-radius: 3rem;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
 }
 
+.heroImg {
+    border-radius: 3rem;
+}
 .heroContent {
     position: absolute;
     text-align: center;
@@ -41,21 +44,20 @@ header h1 {
 
 .ctaButton {
     font-family: "source-sans-3";
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.3rem;
     background-color: var(--heather-bloom);
     color: var(--loch-foam);
     border: none;
     cursor: pointer;
+    border-radius: 8px;
+    text-decoration: none;
 }
 
 .ctaButton:hover {
     background-color: var(--kelp-forest);
 }
 
-.ctaButton:visited {
-    background-color: var(--selkie-grey);
-}
 .starSection {
     height: 9rem;
     display: flex;

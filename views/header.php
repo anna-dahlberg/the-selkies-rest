@@ -26,10 +26,10 @@
         <h1>- The Selkie's Rest -</h1>
 
         <div class="heroContainer">
-            <img src="/assets/images/hero.png" alt="" class="heroImage">
+            <img src="/assets/images/hero.jpg" alt="" class="heroImg">
             <div class="heroContent">
                 <p>Unwind, recharge and create memories <br>on Blackthorn Isle</p>
-                <button class="ctaButton">Book now!</button> <!-- Link to booking form -->
+                <a class="ctaButton" href="#bookYourStay">Book now!</a> <!-- Link to booking form -->
             </div>
         </div>
     </header>

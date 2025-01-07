@@ -95,6 +95,22 @@ require(__DIR__ . '/calendar.php');
                             <label for="radio">Radio $2</label>
                             <input type="checkbox" name="features[]" id="radio" value="radio">
                         </div>
+
+                        <div>
+                            <label for="whiskeyExperience">Scoth Whiskey Experience $2</label>
+                            <input type="checkbox" name="features[]" id="whiskeyExperience" value="whiskeyExperience">
+                        </div>
+
+                        <div>
+                            <label for="lochMonsterHunt">Loch Monster Hunt $2</label>
+                            <input type="checkbox" name="features[]" id="lochMonsterHunt" value="lochMonsterHunt">
+                        </div>
+
+                        <div>
+                            <label for="highlandCowCuddles">Highland Cow Cuddles $2</label>
+                            <input type="checkbox" name="features[]" id="highlandCowCuddles" value="highlandCowCuddles">
+                        </div>
+
                     </fieldset>
                 </div>
 
