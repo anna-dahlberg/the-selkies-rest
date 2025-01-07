@@ -98,18 +98,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         $errors[] = "The chosen room is unfortunately not available for the selected dates";
     }
 
-
-    //Insert booking information to booking table
-    $bookingStatement = $database->prepare("INSERT into bookings(guest_id, arrival_date, departure_date, room_id) VALUES(:guest_id, :arrivalDate, :departureDate, :room_id)");
-    $bookingStatement->execute([
-        ':guest_id' => $guest_id,
-        ':arrivalDate' => $arrivalDate,
-        ':departureDate' => $departureDate,
-        ':room_id' => $room_id
-    ]);
-
-    $booking_id = $database->lastInsertId();
-
     //Calculation for number of nights
     $arrival = new DateTime($arrivalDate);
     $departure = new DateTime($departureDate);
@@ -129,10 +117,11 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     // Check for and apply discount
     $discountRate = 0;
     if ($nights >= 3) {
-        $discountStmt = $database->prepare("SELECT discount_rate FROM discounts WHERE min_nights <= :nights ORDER BY discount_rate DESC LIMIT 1");
+        $discountStmt = $database->prepare("SELECT id, discount_rate FROM discounts WHERE min_nights <= :nights ORDER BY discount_rate DESC LIMIT 1");
         $discountStmt->execute([':nights' => $nights]);
         $discountResult = $discountStmt->fetch(PDO::FETCH_ASSOC);
         if ($discountResult) {
+            $discountId = $discountResult['id'];
             $discountRate = $discountResult['discount_rate'];
         }
     }
@@ -159,25 +148,22 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $subtotal = $baseRoomCost + $featuresTotalCost;
     $totalCost = $subtotal - $discountRate;
 
-    $updateBookingStmt = $database->prepare("UPDATE bookings SET total_cost = :total_cost WHERE id = :booking_id");
+    // $updateBookingStmt = $database->prepare("UPDATE bookings SET total_cost = :total_cost WHERE id = :booking_id");
 
     try {
         $database->beginTransaction();
 
-        // Insert booking
+        $bookingStatement = $database->prepare("INSERT into bookings(guest_id, arrival_date, departure_date, room_id, total_cost, discount_id) VALUES(:guest_id, :arrivalDate, :departureDate, :room_id, :total_cost, :discount_id)");
         $bookingStatement->execute([
             ':guest_id' => $guest_id,
             ':arrivalDate' => $arrivalDate,
             ':departureDate' => $departureDate,
-            ':room_id' => $room_id
-        ]);
-        $booking_id = $database->lastInsertId();
-
-        // Update booking with cost
-        $updateBookingStmt->execute([
+            ':room_id' => $room_id,
             ':total_cost' => $totalCost,
-            ':booking_id' => $booking_id
+            ':discount_id' => $discountId ?? null
         ]);
+
+        $booking_id = $database->lastInsertId();
 
         // Insert features if any
         if (!empty($validFeatures)) {
@@ -204,13 +190,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         $database->rollBack();
         $errors[] = "Booking failed: " . $e->getMessage();
     }
-
-    // Update booking with cost information
-    $updateBookingStmt = $database->prepare("UPDATE bookings SET total_cost = :total_cost WHERE id = :booking_id");
-    $updateBookingStmt->execute([
-        ':total_cost' => $totalCost,
-        ':booking_id' => $booking_id
-    ]);
 
     // Send the transfer code and total cost to the API
     $response = transferCodeSend($transferCode, $totalCost);
