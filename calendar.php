@@ -129,7 +129,7 @@ class Calendar
             //Commented this out to hide the "Previous" button
             // '<a class="prev" href="' . $this->naviHref . '?month=' . sprintf('%02d', $preMonth) . '&year=' . $preYear . '">Prev</a>' . 
 
-            '<span class="title">' . date('Y M', strtotime($this->currentYear . '-' . $this->currentMonth . '-1')) . '</span>' .
+            '<span class="title"> Availability: ' . date('F Y', strtotime($this->currentYear . '-' . $this->currentMonth . '-1')) . '</span>' .
 
             //Commented this out to hide the "Next" button
             // '<a class="next" href="' . $this->naviHref . '?month=' . sprintf("%02d", $nextMonth) . '&year=' . $nextYear . '">Next</a>' .

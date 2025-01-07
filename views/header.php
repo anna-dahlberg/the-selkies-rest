@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Global & main styles -->
+    <!-- Global styles -->
     <link rel="stylesheet" href="/assets/styles/global.css">
 
     <!-- Header styles -->
     <link rel="stylesheet" href="/assets/styles/header.css">
+
+    <!-- Main styles -->
+    <link rel="stylesheet" href="/assets/styles/styles.css">
 
     <!-- Calendar styles -->
     <link href="/assets/styles/calendar.css" rel="stylesheet" />
@@ -25,6 +28,10 @@
     <header>
         <h1>- The Selkie's Rest -</h1>
 
+        <section class="starSection">
+            <img src="/assets/images/stars.svg" alt="">
+        </section>
+
         <div class="heroContainer">
             <img src="/assets/images/hero.jpg" alt="" class="heroImg">
             <div class="heroContent">
@@ -33,8 +40,3 @@
             </div>
         </div>
     </header>
-
-
-    <section class="starSection">
-        <img src="/assets/images/stars.svg" alt="">
-    </section>
