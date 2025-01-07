@@ -102,31 +102,31 @@ require_once __DIR__ . '/views/header.php';
                                 <fieldset>
                                     <legend>Features:</legend>
                                     <div class="checkboxContainer">
-                                        <label for="sauna" id="fw400">Sauna $2</label>
                                         <input type="checkbox" name="features[]" id="sauna" value="sauna">
+                                        <label for="sauna" id="fw400">Sauna $2</label>
                                     </div>
                                     <div class="checkboxContainer">
-                                        <label for="bicycle" id="fw400">Bicycle $2</label>
                                         <input type="checkbox" name="features[]" id="bicycle" value="bicycle">
+                                        <label for="bicycle" id="fw400">Bicycle $2</label>
                                     </div>
                                     <div class="checkboxContainer">
-                                        <label for="radio" id="fw400">Radio $2</label>
                                         <input type="checkbox" name="features[]" id="radio" value="radio">
+                                        <label for="radio" id="fw400">Radio $2</label>
                                     </div>
 
                                     <div class="checkboxContainer">
-                                        <label for="whiskeyExperience" id="fw400">Scoth Whiskey Experience $2</label>
                                         <input type="checkbox" name="features[]" id="whiskeyExperience" value="whiskeyExperience">
+                                        <label for="whiskeyExperience" id="fw400">Scoth Whiskey Experience $2</label>
                                     </div>
 
                                     <div class="checkboxContainer">
-                                        <label for="lochMonsterHunt" id="fw400">Loch Monster Hunt $2</label>
                                         <input type="checkbox" name="features[]" id="lochMonsterHunt" value="lochMonsterHunt">
+                                        <label for="lochMonsterHunt" id="fw400">Loch Monster Hunt $2</label>
                                     </div>
 
                                     <div class="checkboxContainer">
-                                        <label for="highlandCowCuddles" id="fw400">Highland Cow Cuddles $2</label>
                                         <input type="checkbox" name="features[]" id="highlandCowCuddles" value="highlandCowCuddles">
+                                        <label for="highlandCowCuddles" id="fw400">Highland Cow Cuddles $2</label>
                                     </div>
 
                                 </fieldset>
@@ -147,9 +147,9 @@ require_once __DIR__ . '/views/header.php';
                 </div>
 
                 <div class="bookingInfo">
-                    <h3></h3>
-                    <p></p>
-                    <img src="" alt="">
+                    <h3>Relax a little longer,<br>save a little extra</h3>
+                    <p>Enjoy a little extra with us. When you stay three nights or more at Selkies Rest, we’ll offer you $10 off your total booking. It’s our way of saying thank you for choosing to spend more time with us and experiencing the beauty of the Scottish coast.</p>
+                    <img src="/assets/images/selkie.jpg" alt="">
                 </div>
 
             </div>
