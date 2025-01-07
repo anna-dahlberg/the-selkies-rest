@@ -33,9 +33,11 @@ CREATE TABLE IF NOT EXISTS bookings (
 	departure_date DATE,
 	guest_id INTEGER,
 	room_id INTEGER,
+	discount_id INTEGER,
 	total_cost INTEGER,
 	FOREIGN KEY (guest_id) REFERENCES guests(id),
-	FOREIGN KEY (room_id) REFERENCES rooms(id)
+	FOREIGN KEY (room_id) REFERENCES rooms(id),
+	FOREIGN KEY (discount_id) REFERENCES discounts(id)
 );
 ```
 
@@ -67,10 +69,8 @@ CREATE TABLE IF NOT EXISTS rooms_bookings_features (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	booking_id INTEGER,
 	feature_id INTEGER,
-	discount_id INTEGER,
 	FOREIGN KEY (booking_id) REFERENCES bookings(id),
 	FOREIGN KEY (feature_id) REFERENCES features(id),
-	FOREIGN KEY (discount_id) REFERENCES discounts(id)
 );
 ```
 
