@@ -75,9 +75,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
     //Check availability
     $availabilityCheck = $database->prepare("SELECT COUNT(*) FROM bookings WHERE room_id = :room_id AND (
-            (arrival_date <= :arrivalDate AND departure_date > :arrivalDate)
-        OR (arrival_date < :departureDate AND departure_date >= :departureDate)
-        OR (arrival_date >= :arrivalDate AND departure_date <= :departureDate)
+        (arrival_date <= :departureDate AND departure_date >= :arrivalDate)
     )");
 
     $availabilityCheck->execute([
@@ -90,10 +88,10 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         $errors[] = "The chosen room is unfortunately not available for the selected dates";
     }
 
-    //Calculation for number of nights
+    //Calculation for number of days
     $arrival = new DateTime($arrivalDate);
     $departure = new DateTime($departureDate);
-    $days = $departure->diff($arrival)->days;
+    $days = ($departure->diff($arrival)->days) + 1;
 
     //Get the room price
     $roomPriceStatement = $database->prepare("SELECT price FROM rooms WHERE id = :room_id");
@@ -110,7 +108,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $discountRate = 0;
     if ($days >= 3) {
         $discountStmt = $database->prepare("SELECT id, discount_rate FROM discounts WHERE min_days <= :days ORDER BY discount_rate DESC LIMIT 1");
-        $discountStmt->execute([':nights' => $days]);
+        $discountStmt->execute([':days' => $days]);
         $discountResult = $discountStmt->fetch(PDO::FETCH_ASSOC);
         if ($discountResult) {
             $discountId = $discountResult['id'];
@@ -118,7 +116,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         }
     }
 
-    // Calculate features cost (per stay, not per night)
+    // Calculate features cost (per stay, not per day)
     $featuresTotalCost = 0;
     $validFeatures = [];
 
