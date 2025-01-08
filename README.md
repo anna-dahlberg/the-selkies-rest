@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS features (
 CREATE TABLE IF NOT EXISTS discounts (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name VARCHAR(30),
-	min_nights INTEGER,
+	min_days INTEGER,
 	discount_rate INTEGER
 );
 ```
