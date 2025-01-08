@@ -6,7 +6,7 @@ footer {
 .footer {
     background-color: var(--heather-bloom);
     width: 1376px;
-    height: 100vh;
+    height: 100px;
     border-radius: 3rem 3rem 0px 0px;
     margin-top: 2rem;
 }
