@@ -132,6 +132,12 @@ require_once __DIR__ . '/views/header.php';
                                 </fieldset>
                             </div>
 
+                            <div class="totalCost">
+                                <span>Total cost: </span>
+                                <span id="totalCost"> </span>
+
+                            </div>
+
                             <div class="formGroup formGroupFlex">
                                 <label for="transferCode">Your transferCode:</label>
                                 <input type="password" name="transferCode" id="transferCode" required>
@@ -159,6 +165,8 @@ require_once __DIR__ . '/views/header.php';
     </main>
 
 </div>
+
+<script src="assets/scripts/script.js"></script>
 
 
 <?php

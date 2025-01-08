@@ -145,14 +145,14 @@
 }
 
 .bookingInfo img {
-    max-width: 35rem;
+    max-width: 36rem;
 }
 
 /* Form styling */
 
 .bookingForm {
     width: 25rem;
-    height: 47rem;
+    height: 48rem;
     background-color: var(--loch-foam);
     border-radius: 1.25rem;
     padding: 1.2rem 2rem;
@@ -204,6 +204,11 @@ fieldset {
 
 #fw400 {
     font-weight: 400;
+}
+
+.totalCost {
+    font-size: 1.2rem;
+    color: var(--brick-coral);
 }
 
 .checkboxContainer {
