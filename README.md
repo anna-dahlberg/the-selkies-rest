@@ -3,7 +3,7 @@
 
 ![](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTRxY3JvOHJzb2dvcmJ3eHN1ZHRhZ3NjZGFkZ2R0ZGY5a3AwOWdjciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ESNF24bQCAMw0/giphy.gif)
 
-Welcome to **The Selkie's Rest** repository, a custom-built booking system tailored for a boutique hotel experience. This PHP-based application provides users with intuitive booking management, feature exploration, and an integrated calendar system to ensure a seamless reservation process.
+Welcome to **The Selkie's Rest** repository, a custom-built hotel website with a booking system tailored for a great experience. This PHP-based application provides users with intuitive booking management, feature exploration, discounts and an integrated calendar system to ensure a seamless reservation process.
 
 ---
 
