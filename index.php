@@ -91,9 +91,9 @@ require_once __DIR__ . '/views/header.php';
                             <div class="formGroup formGroupFlex">
                                 <label for="roomType">Room Type:</label>
                                 <select id="roomType" name="roomType" required>
-                                    <option value="budget">The Nook</option>
-                                    <option value="standard">The Refuge</option>
-                                    <option value="luxury">The Haven</option>
+                                    <option value="budget">The Nook $3/day</option>
+                                    <option value="standard">The Refuge $6/day</option>
+                                    <option value="luxury">The Haven $9/day</option>
                                 </select>
                             </div>
 
@@ -103,30 +103,30 @@ require_once __DIR__ . '/views/header.php';
                                     <legend>Features:</legend>
                                     <div class="checkboxContainer">
                                         <input type="checkbox" name="features[]" id="sauna" value="sauna">
-                                        <label for="sauna" id="fw400">Sauna $2</label>
+                                        <label for="sauna" id="fw400">Sauna $3</label>
                                     </div>
                                     <div class="checkboxContainer">
                                         <input type="checkbox" name="features[]" id="bicycle" value="bicycle">
-                                        <label for="bicycle" id="fw400">Bicycle $2</label>
+                                        <label for="bicycle" id="fw400">Bicycle $3</label>
                                     </div>
                                     <div class="checkboxContainer">
                                         <input type="checkbox" name="features[]" id="radio" value="radio">
-                                        <label for="radio" id="fw400">Radio $2</label>
+                                        <label for="radio" id="fw400">Radio $3</label>
                                     </div>
 
                                     <div class="checkboxContainer">
                                         <input type="checkbox" name="features[]" id="whiskeyExperience" value="whiskeyExperience">
-                                        <label for="whiskeyExperience" id="fw400">Scoth Whiskey Experience $2</label>
+                                        <label for="whiskeyExperience" id="fw400">Scoth Whiskey Experience $3</label>
                                     </div>
 
                                     <div class="checkboxContainer">
                                         <input type="checkbox" name="features[]" id="lochMonsterHunt" value="lochMonsterHunt">
-                                        <label for="lochMonsterHunt" id="fw400">Loch Monster Hunt $2</label>
+                                        <label for="lochMonsterHunt" id="fw400">Loch Monster Hunt $3</label>
                                     </div>
 
                                     <div class="checkboxContainer">
                                         <input type="checkbox" name="features[]" id="highlandCowCuddles" value="highlandCowCuddles">
-                                        <label for="highlandCowCuddles" id="fw400">Highland Cow Cuddles $2</label>
+                                        <label for="highlandCowCuddles" id="fw400">Highland Cow Cuddles $3</label>
                                     </div>
 
                                 </fieldset>
@@ -148,7 +148,7 @@ require_once __DIR__ . '/views/header.php';
 
                 <div class="bookingInfo">
                     <h3>Relax a little longer,<br>save a little extra</h3>
-                    <p>Enjoy a little extra with us. When you stay three nights or more at Selkies Rest, we’ll offer you $10 off your total booking. It’s our way of saying thank you for choosing to spend more time with us and experiencing the beauty of the Scottish coast.</p>
+                    <p>Enjoy a little extra with us. When you stay three days or more at Selkies Rest, we’ll offer you $2 off your total booking. It’s our way of saying thank you for choosing to spend more time with us and experiencing the beauty of the Scottish coast.</p>
                     <img src="/assets/images/selkie.jpg" alt="">
                 </div>
 
