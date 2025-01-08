@@ -7,7 +7,7 @@ $errors = []; //empty array to catch errors
 $username = 'anna';
 
 //Connection to database 
-$database = new PDO('sqlite:/Users/annadahlberg/dev/yrgo/assignments/the-selkies-rest/app/database/bookings.db');
+$database = new PDO('sqlite:app/database/bookings.db');
 // Enable foreign key support
 $database->exec("PRAGMA foreign_keys = ON;");
 

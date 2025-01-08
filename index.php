@@ -20,7 +20,7 @@ require_once __DIR__ . '/views/header.php';
 
                     Whether you’re savoring local delicacies in our dining room, unwinding in the cozy embrace of your room, or exploring the island’s hidden treasures, you’ll find that The Selkie’s Rest isn’t just a place to stay—it’s a place to belong.</p>
             </div>
-            <img src="/assets/images/blackthornIsle.png" alt="">
+            <img src="assets/images/blackthornIsle.png" alt="">
         </section>
 
         <section class="roomContainer">
@@ -53,7 +53,7 @@ require_once __DIR__ . '/views/header.php';
 
                     Discover the perfect blend of relaxation, adventure, and authentic Scottish charm—all in one magical destination.</p>
             </div>
-            <img src="/assets/images/cow.png" alt="a highland cow">
+            <img src="assets/images/cow.png" alt="a highland cow">
         </section>
 
         <section class="bookingSection">
@@ -149,7 +149,7 @@ require_once __DIR__ . '/views/header.php';
                 <div class="bookingInfo">
                     <h3>Relax a little longer,<br>save a little extra</h3>
                     <p>Enjoy a little extra with us. When you stay three days or more at Selkies Rest, we’ll offer you $2 off your total booking. It’s our way of saying thank you for choosing to spend more time with us and experiencing the beauty of the Scottish coast.</p>
-                    <img src="/assets/images/selkie.jpg" alt="">
+                    <img src="assets/images/selkie.jpg" alt="">
                 </div>
 
             </div>
