@@ -6,14 +6,9 @@ require(__DIR__ . '/functions.php');
 $errors = []; //empty array to catch errors
 $username = 'anna';
 
-//Connection to database 
-$database = new PDO('sqlite:app/database/bookings.db');
-// Enable foreign key support
-$database->exec("PRAGMA foreign_keys = ON;");
-
-//Fetch previous bookings
-$statement = $database->query('SELECT * FROM bookings');
-$bookings = $statement->fetchAll(PDO::FETCH_ASSOC);
+//Connect to database & fetch previous bookings
+$database = connectionDatabase();
+$bookings = fetchBookings($database);
 
 //Check if form data is set
 if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['departureDate'], $_POST['roomType'], $_POST['transferCode'])) {
@@ -207,6 +202,8 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     ];
 
     $randomImageUrl = $imageUrls[rand(0, count($imageUrls) - 1)];
+
+    $homePageUrl = "https://anna-dahlberg.com/the-selkies-rest/";
 
     $jsonResponse = generateBookingResponse(
         "Blackthorn Isle",

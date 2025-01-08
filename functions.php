@@ -14,6 +14,15 @@ function connectionDatabase(): PDO
     return $database;
 }
 
+// Function to retrieve bookings
+
+function fetchBookings(PDO $database): array
+{
+    $statement = $database->query('SELECT * FROM bookings');
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 
 // Function to check if transferCode is valid 
 function isValidUuid(string $uuid): bool
@@ -25,7 +34,6 @@ function isValidUuid(string $uuid): bool
 
     return true;
 }
-
 
 
 // Function to send transferCode and total cost to the central bank API
@@ -68,11 +76,6 @@ function makeDeposit(string $username, string $transferCode): string
 {
     $client = new Client();
     try {
-        // Echo the data being sent
-        // echo "Sending deposit request with: \n";
-        // echo "Username: " . $username . "\n";
-        // echo "TransferCode: " . $transferCode . "\n";
-
         $response = $client->post('https://www.yrgopelago.se/centralbank/deposit', [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -106,7 +109,8 @@ function generateBookingResponse(
     int $stars,
     array $features = [],
     string $greeting = "Your adventure begins here! Thank you for booking with Selkies Rest. We’re looking forward to your visit!",
-    string $randomImageUrl = ""
+    string $randomImageUrl = "",
+    string $homePageUrl = "/"
 ) {
     $response = [
         "island" => $island,
@@ -118,7 +122,11 @@ function generateBookingResponse(
         "features" => $features,
         "additional_info" => [
             "greeting" => $greeting,
-            "imageUrl" => $randomImageUrl
+            "imageUrl" => $randomImageUrl,
+            "home_link" => [
+                "text" => "Take me home",
+                "url" => $homePageUrl
+            ]
         ]
     ];
 
