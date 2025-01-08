@@ -72,14 +72,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     };
     $room_id = $room['id'];
 
-    //Insert guest information to guest table 
-    $guestStatement = $database->prepare("INSERT into guests(name, email) VALUES(:name, :email)");
-    $guestStatement->execute([
-        ':name' => $name,
-        ':email' => $email
-    ]);
-
-    $guest_id = $database->lastInsertId();
 
     //Check availability
     $availabilityCheck = $database->prepare("SELECT COUNT(*) FROM bookings WHERE room_id = :room_id AND (
@@ -101,7 +93,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     //Calculation for number of nights
     $arrival = new DateTime($arrivalDate);
     $departure = new DateTime($departureDate);
-    $nights = $departure->diff($arrival)->days;
+    $days = $departure->diff($arrival)->days;
 
     //Get the room price
     $roomPriceStatement = $database->prepare("SELECT price FROM rooms WHERE id = :room_id");
@@ -111,14 +103,14 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $roomPrice = $roomPriceStatement->fetch(PDO::FETCH_ASSOC)['price'];
 
     // Calculate base room cost
-    $baseRoomCost = $roomPrice * $nights;
+    $baseRoomCost = $roomPrice * $days;
 
 
     // Check for and apply discount
     $discountRate = 0;
-    if ($nights >= 3) {
-        $discountStmt = $database->prepare("SELECT id, discount_rate FROM discounts WHERE min_nights <= :nights ORDER BY discount_rate DESC LIMIT 1");
-        $discountStmt->execute([':nights' => $nights]);
+    if ($days >= 3) {
+        $discountStmt = $database->prepare("SELECT id, discount_rate FROM discounts WHERE min_days <= :days ORDER BY discount_rate DESC LIMIT 1");
+        $discountStmt->execute([':nights' => $days]);
         $discountResult = $discountStmt->fetch(PDO::FETCH_ASSOC);
         if ($discountResult) {
             $discountId = $discountResult['id'];
@@ -148,9 +140,19 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $subtotal = $baseRoomCost + $featuresTotalCost;
     $totalCost = $subtotal - $discountRate;
 
+
     try {
         $database->beginTransaction();
 
+        //Insert guest information to guest table 
+        $guestStatement = $database->prepare("INSERT into guests(name, email) VALUES(:name, :email)");
+        $guestStatement->execute([
+            ':name' => $name,
+            ':email' => $email
+        ]);
+        $guest_id = $database->lastInsertId();
+
+        //Insert booking information to bookings table
         $bookingStatement = $database->prepare("INSERT into bookings(guest_id, arrival_date, departure_date, room_id, total_cost, discount_id) VALUES(:guest_id, :arrivalDate, :departureDate, :room_id, :total_cost, :discount_id)");
         $bookingStatement->execute([
             ':guest_id' => $guest_id,
@@ -160,7 +162,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
             ':total_cost' => $totalCost,
             ':discount_id' => $discountId ?? null
         ]);
-
         $booking_id = $database->lastInsertId();
 
         // Insert features if any
@@ -183,24 +184,14 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
             throw new Exception("Transfer code verification failed");
         }
 
+        $depositResponse = makeDeposit($username, $response['transferCode']);
+
         $database->commit();
     } catch (Exception $e) {
         $database->rollBack();
         $errors[] = "Booking failed: " . $e->getMessage();
     }
 
-    // Send the transfer code and total cost to the API
-    $response = transferCodeSend($transferCode, $totalCost);
-    $depositResponse = "Not attempted"; // Initialize variable
-
-
-    // Check if the API response is successful
-    if (isset($response['status']) && $response['status'] === "success") {
-        $transferCode = $response['transferCode'];
-
-        //Make deposit 
-        $depositResponse = makeDeposit($username, $transferCode);
-    }
     // Check if there are any errors
     if (!empty($errors)) {
         // Display errors
