@@ -39,9 +39,9 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         $errors[] = "Please choose a valid room type";
     }
 
-    //Validate dates and make sure departure date is after arrival
-    if (strtotime($arrivalDate) >= strtotime($departureDate)) {
-        $errors[] = "Departure date must be after arrival date";
+    //Validate dates and make sure departure date is not before arrival date
+    if (strtotime($departureDate) < strtotime($arrivalDate)) {
+        $errors[] = "Departure date cannot be before arrival date.";
     }
 
     if (strtotime($arrivalDate) < strtotime('today')) {
@@ -132,6 +132,8 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     // Calculate total cost
     $subtotal = $baseRoomCost + $featuresTotalCost;
     $totalCost = $subtotal - $discountRate;
+
+
 
 
     try {
