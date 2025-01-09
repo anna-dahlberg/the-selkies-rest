@@ -200,7 +200,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
                 $arrivalDate,
                 $departureDate,
                 $totalCost,
-                3,
+                4,
                 array_map(fn($feature) => ["name" => $feature, "cost" => 2.0], $features),
                 "Your adventure begins here! Thank you for booking with Selkies Rest. We’re looking forward to your visit!",
                 $randomImageUrl
