@@ -39,7 +39,7 @@ main {
     
 }
 
-h1,h2,h3,h4, .form, legend {
+h1,h2,h3,h4,h5 .form, legend {
     font-family: 'playfair-display';
 }
 
