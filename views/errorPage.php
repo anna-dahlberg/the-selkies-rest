@@ -13,8 +13,8 @@ unset($_SESSION['errors']); // Clear errors after displaying
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assets/styles/error.css">
-    <link rel="stylesheet" href="/assets/styles/global.css">
+    <link rel="stylesheet" href="assets/styles/error.css">
+    <link rel="stylesheet" href="assets/styles/global.css">
     <title>Error!</title>
 </head>
 
@@ -24,7 +24,7 @@ unset($_SESSION['errors']); // Clear errors after displaying
         <?php foreach ($errors as $error): ?>
             <p class="errorMessage"><?= htmlspecialchars($error) ?></p>
         <?php endforeach; ?>
-        <p><a href="index.php">Take me back</a></p>
+        <p><a href="../index.php">Take me back</a></p>
     </div>
 </body>
 
