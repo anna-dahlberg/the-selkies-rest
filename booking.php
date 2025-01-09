@@ -3,6 +3,8 @@
 declare(strict_types=1);
 require(__DIR__ . '/functions.php');
 
+session_start();
+
 $errors = []; //empty array to catch errors
 $username = 'anna';
 
@@ -134,95 +136,90 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
     $totalCost = $subtotal - $discountRate;
 
 
+    if (empty($errors)) {
+        try {
+            $database->beginTransaction();
+
+            //Insert guest information to guest table 
+            $guestStatement = $database->prepare("INSERT into guests(name, email) VALUES(:name, :email)");
+            $guestStatement->execute([
+                ':name' => $name,
+                ':email' => $email
+            ]);
+            $guest_id = $database->lastInsertId();
+
+            //Insert booking information to bookings table
+            $bookingStatement = $database->prepare("INSERT into bookings(guest_id, arrival_date, departure_date, room_id, total_cost, discount_id) VALUES(:guest_id, :arrivalDate, :departureDate, :room_id, :total_cost, :discount_id)");
+            $bookingStatement->execute([
+                ':guest_id' => $guest_id,
+                ':arrivalDate' => $arrivalDate,
+                ':departureDate' => $departureDate,
+                ':room_id' => $room_id,
+                ':total_cost' => $totalCost,
+                ':discount_id' => $discountId ?? null
+            ]);
+            $booking_id = $database->lastInsertId();
+
+            // Insert features if any
+            if (!empty($validFeatures)) {
+                $featureStatement = $database->prepare(
+                    "INSERT INTO rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)"
+                );
+
+                foreach ($validFeatures as $feature) {
+                    $featureStatement->execute([
+                        ':booking_id' => $booking_id,
+                        ':feature_id' => $feature['id']
+                    ]);
+                }
+            }
+
+            // Only process transfer code after database operations succeed
+            $response = transferCodeSend($transferCode, $totalCost);
+            if (!isset($response['status']) || $response['status'] !== "success") {
+                throw new Exception("Transfer code verification failed");
+            }
+
+            $depositResponse = makeDeposit($username, $response['transferCode']);
+
+            $database->commit();
 
 
-    try {
-        $database->beginTransaction();
+            $imageUrls = [
+                "https://unsplash.com/photos/yak-reclining-on-grass-field-vi48b5vFtbo",
+                "https://unsplash.com/photos/domestic-yak-cKLr1zNnCzg",
+                "https://unsplash.com/photos/a-yak-lying-on-the-grass-KdabhKD0tmk",
+                "https://unsplash.com/photos/brown-yak-on-grass-field-u3XMyl-4OSY"
+            ];
 
-        //Insert guest information to guest table 
-        $guestStatement = $database->prepare("INSERT into guests(name, email) VALUES(:name, :email)");
-        $guestStatement->execute([
-            ':name' => $name,
-            ':email' => $email
-        ]);
-        $guest_id = $database->lastInsertId();
+            $randomImageUrl = $imageUrls[rand(0, count($imageUrls) - 1)];
 
-        //Insert booking information to bookings table
-        $bookingStatement = $database->prepare("INSERT into bookings(guest_id, arrival_date, departure_date, room_id, total_cost, discount_id) VALUES(:guest_id, :arrivalDate, :departureDate, :room_id, :total_cost, :discount_id)");
-        $bookingStatement->execute([
-            ':guest_id' => $guest_id,
-            ':arrivalDate' => $arrivalDate,
-            ':departureDate' => $departureDate,
-            ':room_id' => $room_id,
-            ':total_cost' => $totalCost,
-            ':discount_id' => $discountId ?? null
-        ]);
-        $booking_id = $database->lastInsertId();
-
-        // Insert features if any
-        if (!empty($validFeatures)) {
-            $featureStatement = $database->prepare(
-                "INSERT INTO rooms_bookings_features(booking_id, feature_id) VALUES(:booking_id, :feature_id)"
+            $jsonResponse = generateBookingResponse(
+                "Blackthorn Isle",
+                "The Selkie\'s Rest",
+                $arrivalDate,
+                $departureDate,
+                $totalCost,
+                3,
+                array_map(fn($feature) => ["name" => $feature, "cost" => 2.0], $features),
+                "Your adventure begins here! Thank you for booking with Selkies Rest. We’re looking forward to your visit!",
+                $randomImageUrl
             );
 
-            foreach ($validFeatures as $feature) {
-                $featureStatement->execute([
-                    ':booking_id' => $booking_id,
-                    ':feature_id' => $feature['id']
-                ]);
-            }
+            // If no errors, display success message with responses
+            header('Content-Type: application/json');
+            exit;
+        } catch (Exception $e) {
+            $database->rollBack();
+            $errors[] = "Booking failed: " . $e->getMessage();
         }
-
-        // Only process transfer code after database operations succeed
-        $response = transferCodeSend($transferCode, $totalCost);
-        if (!isset($response['status']) || $response['status'] !== "success") {
-            throw new Exception("Transfer code verification failed");
-        }
-
-        $depositResponse = makeDeposit($username, $response['transferCode']);
-
-        $database->commit();
-    } catch (Exception $e) {
-        $database->rollBack();
-        $errors[] = "Booking failed: " . $e->getMessage();
     }
 
-    // Check if there are any errors
     if (!empty($errors)) {
-        // Display errors
-        foreach ($errors as $error) {
-            echo "<p style='color: red;'>$error</p>";
-        }
+        // Send user to error page
+        session_start();
+        $_SESSION['errors'] = $errors;
+        header('Location: views/errorPage.php');
         exit; // Stop further execution if there are errors
     }
-
-    $imageUrls = [
-        "https://unsplash.com/photos/yak-reclining-on-grass-field-vi48b5vFtbo",
-        "https://unsplash.com/photos/domestic-yak-cKLr1zNnCzg",
-        "https://unsplash.com/photos/a-yak-lying-on-the-grass-KdabhKD0tmk",
-        "https://unsplash.com/photos/brown-yak-on-grass-field-u3XMyl-4OSY"
-    ];
-
-    $randomImageUrl = $imageUrls[rand(0, count($imageUrls) - 1)];
-
-    $homePageUrl = "https://anna-dahlberg.com/the-selkies-rest/";
-
-    $jsonResponse = generateBookingResponse(
-        "Blackthorn Isle",
-        "The Selkie\'s Rest",
-        $arrivalDate,
-        $departureDate,
-        $totalCost,
-        3,
-        array_map(fn($feature) => ["name" => $feature, "cost" => 2.0], $features),
-        "Your adventure begins here! Thank you for booking with Selkies Rest. We’re looking forward to your visit!",
-        $randomImageUrl
-    );
-
-    // If no errors, display success message with responses
-    header('Content-Type: application/json');
-    exit;
-} else {
-
-    die('Please fill out all required fields.'); //Stop script if field empty - necessary even though form field is required in html
 }

@@ -110,7 +110,6 @@ function generateBookingResponse(
     array $features = [],
     string $greeting = "Your adventure begins here! Thank you for booking with Selkies Rest. We’re looking forward to your visit!",
     string $randomImageUrl = "",
-    string $homePageUrl = "/"
 ) {
     $response = [
         "island" => $island,
@@ -123,10 +122,6 @@ function generateBookingResponse(
         "additional_info" => [
             "greeting" => $greeting,
             "imageUrl" => $randomImageUrl,
-            "home_link" => [
-                "text" => "Take me home",
-                "url" => $homePageUrl
-            ]
         ]
     ];
 
