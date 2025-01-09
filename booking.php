@@ -196,7 +196,7 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
 
             $jsonResponse = generateBookingResponse(
                 "Blackthorn Isle",
-                "The Selkie\'s Rest",
+                "The Selkie's Rest",
                 $arrivalDate,
                 $departureDate,
                 $totalCost,
