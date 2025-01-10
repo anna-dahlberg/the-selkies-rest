@@ -167,3 +167,23 @@ VALUES ('sauna',3),
 INSERT INTO discounts (name, min_days, discount_rate)
 VALUES ('Selkie Stay Discount', 3, 2);
 ```
+
+footer.php:9-13 - Your way is working but instead of <br>, you could position the text with flex or wrap each line as <li>.
+
+footer.php: 4 - You should have a value in alt="" for accessibility.
+
+header.php: 35 & 39 - You should have a value in alt="" for accessibility.
+
+index.php: 23 & 158 - You should have a value in alt="" for accessibility.
+
+global.css : :root - You could have the different font families in root so its easier to change the fonts.
+
+global.css : 22 - Commented out code that should be removed.
+
+functions.php: 90 - Commented out code should be removed.
+
+errorPage.php: 3 - You used strict_types in a file that has both php and html. We were supposed to only use strict_types in files with only php.
+
+script.js: You could have made more comments explaining your function.
+
+script.js: 11 & 19 - Could have made the variable names a bit clearer like totalCost instead of total and bookedDays instead of days 
