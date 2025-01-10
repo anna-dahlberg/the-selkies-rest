@@ -46,10 +46,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['arrivalDate'], $_POST['depart
         $errors[] = "Departure date cannot be before arrival date.";
     }
 
-    if (strtotime($arrivalDate) < strtotime('today')) {
-        $errors[] = "Cannot book dates in the past";
-    }
-
     //Validate transferCode
     if (!isValidUuid($_POST['transferCode'])) {
         $errors[] = "Invalid transfer code format";
